@@ -1,0 +1,198 @@
+html,body{
+    margin:0;
+    height:100%;
+}
+
+#app {
+    width:100%;
+    height:100%;
+}
+
+code, div, pre, ul {
+    min-height: 0;
+    min-width: 0;
+}
+
+header {
+    display: flex;
+    width: 100%;
+    z-index: 20;
+    text-align: center;
+    font-size: 30px;
+}
+
+footer, header {
+    height: 56px;
+    color: #fff;
+}
+
+footer {
+    bottom: 0;
+    display: flex;
+    width: 100%;
+    z-index: 30;
+    -ms-flex-line-pack: stretch;
+    align-content: stretch;
+}
+
+/*.scene, .wrapper, .wrapper-code, .wrapper-row, footer, header {*/
+    /*display: -webkit-box;*/
+/*}*/
+
+.header-middle, header {
+    background-color: #dcdcdc;
+}
+
+.list, .play-button, .wrapper, footer, header {
+    overflow: hidden;
+}
+
+.header-left, .header-right {
+    /*padding: 7px 20px 5px;*/
+    padding:0px;
+    width: 80px;
+    background-color: #dcdcdc;
+}
+
+.range-bar {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-content: flex-start;
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
+}
+
+.header-middle {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+
+.header-middle, header {
+    background-color: #dcdcdc;
+}
+
+.range-bar .progress {
+    background-color: #adc3f1;
+    border-right: 1px solid #fff;
+}
+
+//------------ header css end ----------
+
+//wraper
+/*.wrapper-row {*/
+    /*display: flex;*/
+    /*-webkit-box-flex: 1;*/
+    /*-webkit-flex: 1;*/
+    /*-ms-flex: 1;*/
+    /*flex: 1;*/
+    /*-webkit-flex-direction: row;*/
+    /*-ms-flex-direction: row;*/
+    /*flex-direction: row;*/
+    /*-ms-flex-line-pack: stretch;*/
+    /*align-content: stretch;*/
+/*}*/
+
+/*.wrapper-code {*/
+    /*display: flex;*/
+    /*-webkit-box-flex: 1;*/
+    /*-webkit-flex: 1;*/
+    /*-ms-flex: 1;*/
+    /*flex: 1;*/
+    /*-webkit-flex-direction: row;*/
+    /*-ms-flex-direction: row;*/
+    /*flex-direction: row;*/
+    /*-ms-flex-line-pack: stretch;*/
+    /*align-content: stretch;*/
+/*}*/
+
+/*.wrapper-code, .wrapper-row {*/
+    /*-webkit-align-content: stretch;*/
+/*}*/
+/*.ace-flex, .replay, .wrapper, .wrapper-code, .wrapper-row {*/
+    /*position: relative;*/
+/*}*/
+/*.list {*/
+    /*margin: 0;*/
+    /*padding: 0;*/
+    /*list-style: none;*/
+    /*width: 80px;*/
+    /*overflow-y: auto!important;*/
+    /*z-index: 10;*/
+/*}*/
+
+/*.scene {*/
+    /*-webkit-box-flex: 1;*/
+    /*-webkit-flex: 1;*/
+    /*-ms-flex: 1;*/
+    /*flex: 1;*/
+    /*display: flex;*/
+    /*-ms-flex-line-pack: stretch;*/
+    /*align-content: stretch;*/
+/*}*/
+
+
+.wrapper-my{
+    display:flex;
+}
+
+.wrapper {
+    height:100%;
+    display:flex;
+    flex-direction: column;
+}
+
+.wrapper-row{
+    display:flex;
+    height:100%;
+    flex-direction:row;
+}
+
+.wrapper-code {
+    display:flex;
+    flex:1;
+}
+.list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 80px;
+    overflow-y: auto!important;
+    z-index: 10;
+}
+.list, .list input {
+    background-color: #dcdcdc;
+}
+
+.input-group {
+    position: relative;
+}
+.list input {
+    border: 0;
+    font-size: 16px;
+    padding: 16px 5px;
+    width: 70px;
+    color: #fff;
+}
+
+.active {
+    background-color: #c3c3c3;
+}
+
+.file-list input, .input-button, .play-button {
+    cursor: pointer;
+}
+.replay {
+    height: 40px;
+    width: 40px;
+    border-radius: 40px;
+    border: 8px solid #fff;
+}
+
+.play-button span.iconfont {
+    font-size:50px;
+    color:red;
+}
