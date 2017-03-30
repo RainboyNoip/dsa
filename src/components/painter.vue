@@ -6,17 +6,21 @@
         <input class="input-button active" readonly="" value="出栈" title="出栈">
       </div>
     </div>
-
-    <div class="scene">
-    </div>
-
+    <scene></scene>
   </div>
-  
-  <div class="wrapper-code main">
-    <h1>code</h1>
-    <i class="iconfont icon-stop"></i>
-    <pre>
-    </pre>
-  </div>
+  <editor></editor>
 </div>
 </template>
+<script>
+    import editor from './Editor.vue'
+    import scene from './scene.vue'
+    export default {
+        data(){
+            return{};
+        },
+        components:{
+            editor,
+            scene
+        }
+    }
+</script>

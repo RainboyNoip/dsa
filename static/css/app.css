@@ -196,3 +196,70 @@ footer {
     font-size:50px;
     color:red;
 }
+
+pre {
+    margin: 0;
+    overflow:auto;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    /* flex: 1; */
+    background-color: #f0f0f0;
+}
+
+.numbersFa {
+    overflow:auto;
+    /*width:80px;*/
+}
+.numbers {
+    overflow-y:auto;
+    width: 55px;
+    box-shadow: 0 0 1px 0 #000;
+    margin-right:-15px;
+    z-index: -999;
+}
+pre code {
+    display: block;
+    padding: .5em;
+    background: #F0F0F0;
+}
+
+.numbers span {
+    display:block;
+    height:15px;
+    overflow:hidden;
+    font-size:15px;
+}
+span.line {
+    min-height: 18px;
+    height:15px;
+    padding: 0 .5em;
+}
+
+pre .wrapper{
+    overflow-y:auto;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    padding: 0!important;
+    z-index: 1;
+    background-color: transparent!important;
+    font-size:15px;
+}
+
+pre .wrapper {
+     height: auto; 
+     -webkit-flex: 1; 
+    -ms-flex: 1;
+     flex: 1; 
+}
+
+div.wrapper-code.main .wrapper{
+    overflow-y:auto;
+    width:100%;
+    background-color:#e2e2e2;
+}
