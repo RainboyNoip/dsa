@@ -11,16 +11,20 @@
   "dependencies": {
     "file-loader": "^0.10.1",
     "vue": "^2.2.1",
-    "vue-router": "^2.3.0"
+    "vue-modalx": "^1.0.12",
+    "vue-router": "^2.3.0",
+    "vue2-ace": "^1.0.6"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
     "babel-loader": "^6.0.0",
     "babel-preset-latest": "^6.0.0",
+    "brace": "^0.10.0",
     "cross-env": "^3.0.0",
     "css-loader": "^0.25.0",
     "vue-loader": "^11.1.4",
     "vue-template-compiler": "^2.2.1",
+    "vue2-ace-editor": "^0.0.2",
     "webpack": "^2.2.0",
     "webpack-dev-server": "^2.2.0"
   }

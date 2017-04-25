@@ -1,8 +1,6 @@
 <template>
 <div class="scene">
-    <h1>
-        hello
-    </h1>
-
+    <svg>
+    </svg>
 </div>
 </template>
