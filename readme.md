@@ -20,3 +20,7 @@ npm run build
 ```
 
 For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+## 使用的开源项目
+
+ - [水果图标库](http://www.iconfont.cn/plus/collections/detail?cid=4014)

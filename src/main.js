@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
+import category from './category.vue'
 var _app=require('../config.js')
 
 Vue.use(VueRouter)
@@ -11,7 +12,8 @@ Vue.prototype.app = _app;
 
 const router = new VueRouter({
   routes:[
-    {path:'/',component:App}
+    {path:'/',component:category},
+    {path:'/:id',component:App},
   ]
 })
 

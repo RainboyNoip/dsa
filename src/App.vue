@@ -27,17 +27,19 @@ export default {
             frames:[],
             speed:50,
             frame_total:10,
-            play_frame_idx:1
+          play_frame_idx:1,
+          dsa_path:''
         }
     },
     mounted(){
         let self = this;
+        self.dsa_path=self.$route.params.id;
         //事件监听
         self.$eventHub.$on('setPlayFrameIdx',self.setPlayFrameIdx);
         self.$eventHub.$on('setSpeed',self.setSpeed);
         console.log("开始加载DAS数据:--");
-        console.log("要加载的DAS数据地址是:/dsa/function_pass_parameter/");
-        let base_url = 'dsa/function_pass_parameter/'
+        console.log("要加载的DAS数据地址是:/"+self.dsa_path);
+        let base_url = 'dsa/'+self.dsa_path+"/";
         let app = this.app;
         Promise.all([
             getSrc(base_url+"algorithm.c"),
