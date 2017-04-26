@@ -17,7 +17,11 @@ function checkStatus ([status,statusText,data]) {
 
 
 export default{
-  get (url, param = {}, headers = {}, host = globalConfig.api) {
+  get (url, param = {}, headers = {}, host = process.env.api) {
+    console.log(process.env)
+    console.log(process.env.NODE_ENV)
+    console.log(host)
+    console.log(process.env.api)
     console.log(url)
 
     let reqHeaders = new Headers()
@@ -39,7 +43,7 @@ export default{
       .then(parseResponse)
       .then(checkStatus)
   },
-  patch (url, param = {}, headers = {}, host = globalConfig.api) {
+  patch (url, param = {}, headers = {}, host = process.env.api) {
     let reqHeaders = new Headers()
     reqHeaders.append('Content-Type', 'application/json')
     reqHeaders.append('Accept', 'application/json')
@@ -57,7 +61,7 @@ export default{
       .then(parseResponse)
       .then(checkStatus)
   },
-  post (url, param = {}, headers = {}, host = globalConfig.api) {
+  post (url, param = {}, headers = {}, host = process.env.api) {
     let reqHeaders = new Headers()
     reqHeaders.append('Content-Type', 'application/json')
     reqHeaders.append('Accept', 'application/json')
@@ -74,7 +78,7 @@ export default{
       .then(parseResponse)
       .then(checkStatus)
   },
-  put (url, param = {}, headers = {}, host = globalConfig.api) {
+  put (url, param = {}, headers = {}, host = process.env.api) {
     let reqHeaders = new Headers()
     reqHeaders.append('Content-Type', 'application/json')
     reqHeaders.append('Accept', 'application/json')
@@ -92,7 +96,7 @@ export default{
       .then(parseResponse)
       .then(checkStatus)
   },
-  delete (url, param = {}, headers = {}, host = globalConfig.api) {
+  delete (url, param = {}, headers = {}, host = process.env.api) {
     let reqHeaders = new Headers()
     reqHeaders.append('Content-Type', 'application/json')
     reqHeaders.append('Accept', 'application/json')

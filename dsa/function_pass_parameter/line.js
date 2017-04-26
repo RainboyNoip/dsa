@@ -12,6 +12,8 @@ function stop(line,i,animation){
   frames.push({
     status:lastStatus,
     line:line,
+    hls:line, //hightlight start
+    hlt:i,//hightlight stop
     animation:animation,
     id:stopid
   });
@@ -21,13 +23,14 @@ function stop(line,i,animation){
 function run(){
   //生成空的一帧
   _init_();
-  stop(line,0);
+  stop(0,0);
   tranlate_argu();
   //指向的箭头 : 第二帧
   arg_path();
-  stop(line,1);
+  stop(11,11);
   // 第三帧:参数的移动
   pass_arg();
+  stop(3,6);
 }
 
 function tranlate_argu(){
@@ -41,20 +44,20 @@ function _init_(){
 
 function pass_arg(){
   currentStatus.pass_arg = [{
-    arg:'a',
+    arg:'1',
     sx:100,
     sy:325,
     dx:25,
-    dy:25,
+    dy:30,
     tx:100,
     ty:75
   },
     {
-      arg:'b',
+      arg:'2',
       sx:250,
       sy:325,
       dx:25,
-      dy:25,
+      dy:30,
       tx:250,
       ty:75
     }

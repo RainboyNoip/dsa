@@ -1,6 +1,6 @@
 <template>
 <div class="wrapper-code main">
-    <editor :content="src" :lang="'c_cpp'" :theme="'tomorrow_night_blue'" :sync="true" 
+    <editor :content="src" :lang="'c_cpp'" :theme="'solarized_dark'" :sync="true" 
         :height="'100%'"
         :width="'100%'"
         :options="options"></editor>
@@ -8,8 +8,6 @@
 </template>
 <script>
 import editor from './ace.js'
-import 'brace/mode/c_cpp'
-import 'brace/theme/tomorrow_night_blue'
 export default {
     data(){
         return{

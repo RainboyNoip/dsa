@@ -1,5 +1,3 @@
-var ace = require('brace');
-
 module.exports = {
   template: '<div :style="{height: height, width: width}"></div>',
 
@@ -37,7 +35,8 @@ module.exports = {
   data: function () {
     return {
       editor: null,
-      Range:null
+      Range:null,
+      marker:null
     };
   },
 
@@ -46,6 +45,7 @@ module.exports = {
     var lang = vm.lang;
     var theme = vm.theme;
     var editor = vm.editor = ace.edit(vm.$el);
+    vm.Range = ace.require('ace/range').Range;
     //vm.Range = ace.require('ace/range').Range;
     var options = vm.options;
     editor.renderer.$cursorLayer.element.style.display = "none"
@@ -61,32 +61,16 @@ module.exports = {
   },
   methods:{
     heightLines:function(s,t){
-      s--;t--;
-      console.log("he line")
-      var aceLines = document.getElementsByClassName("ace_line");
-      var gutters = document.getElementsByClassName("ace_gutter-cell");
-      var gutLineNo = parseInt(gutters[0].innerHTML)-1;
-      //remove all class
-      for(let i =0;i<aceLines.length;i++){
-        this.removeClass(aceLines[i],'hl-line');
-        this.removeClass(gutters[i],'hl-line');
+      console.log(s,t);
+      var self = this;
+      self.editor.resize(true);
+      self.editor.gotoLine(s, t-s, true);
+      if(self.marker !== null){
+        self.editor.session.removeMarker(self.marker);
       }
-      for(let i =s;i<=t;i++){
-        aceLines[i].className += " "+'hl-line';
-        gutters[i].className += " "+'hl-line';
-      }
-    },
-    hasClass:function (obj, cls) {  
-        return obj.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));  
-    },
-    removeClass:function (obj, cls) {  
-        if (this.hasClass(obj, cls)) {  
-                var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');  
-                  obj.className = obj.className.replace(reg, ' ');  
-              }  
+      self.marker = self.editor.session.addMarker(new self.Range(s-1, 0, t, 0), "active_line", "line");
     }
   },
-
   watch: {
     content: function (newContent) {
       var vm = this;

@@ -58,6 +58,48 @@ var background_data = [
   },
 ];
 
+
+//文字数据
+var _arg_text = [
+{
+    arg:'1',
+    sx:100,
+    sy:325,
+    dx:25,
+    dy:30,
+  },
+    {
+      arg:'2',
+      sx:250,
+      sy:325,
+      dx:25,
+      dy:30,
+    }
+]
+
+var _arg_name_text = [
+  {
+    name:"a",
+    x:90,
+    y:110
+  },
+  {
+    name:"b",
+    x:240,
+    y:110
+  },
+  {
+    name:"a",
+    x:90,
+    y:355
+  },
+  {
+    name:"b",
+    x:240,
+    y:355
+  }
+]
+
 //箭头数据
 var arg_path = [
   {
@@ -128,6 +170,46 @@ function render_init(){
         return [d.x, d.y];
     }));
 
+  //添加文字
+  gsvg.selectAll("text")
+  .data(_arg_text)
+  .enter().append("text")
+  .attr("fill","black")
+  .attr("font-size","24px")
+  .attr("text-anchor","middle")
+  .attr("x",function(d){
+    return d.sx;
+  })
+  .attr("y",function(d){
+    return d.sy;
+  })
+  .attr("dx",function(d){
+    return d.dx;
+  })
+  .attr("dy",function(d){
+    return d.dy;
+  })
+  .text(function(d){
+    return d.arg
+  })
+
+  //name_text
+  gsvg.selectAll("text.name")
+  .data(_arg_name_text)
+  .enter().append("text")
+  .attr("class","name")
+  .attr("fill",scaleColor(5))
+  .attr("font-size","24px")
+  .attr("text-anchor","end")
+  .attr("x",function(d){
+    return d.x;
+  })
+  .attr("y",function(d){
+    return d.y;
+  })
+  .text(function(d){
+    return d.name;
+  })
 }
 
 //绘制参数的箭头
@@ -176,15 +258,41 @@ function _draw_argu_path(dstatus){
 //绘制函数的值的传递
 function _draw_func_argu(dstatus,_delay){
 
-  var textUpdate = gsvg.selectAll('text')
+  var textUpdate = gsvg.selectAll('text.arg')
   .data(dstatus.pass_arg);
 
   //enter
-  text.enter().append("text")
+  textUpdate.enter().append("text")
+  .attr("class","arg")
   .attr("fill","black")
-  .attr("font-size","14px")
-  .attr()
-
+  .attr("font-size","24px")
+  .attr("text-anchor","middle")
+  .attr("x",function(d){
+    return d.sx;
+  })
+  .attr("y",function(d){
+    return d.sy;
+  })
+  .attr("dx",function(d){
+    return d.dx;
+  })
+  .attr("dy",function(d){
+    return d.dy;
+  })
+  .text(function(d){
+    return d.arg
+  })
+  .transition()
+  .duration(1000)
+  .attr("x",function(d){
+    return d.tx;
+  })
+  .attr("y",function(d){
+    return d.ty;
+  })
+  
+  //exit()
+  textUpdate.exit().remove();
 }
 function render(_status,_delay){
   _draw_argu_path(_status,_delay);

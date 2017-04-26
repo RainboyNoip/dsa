@@ -43,42 +43,41 @@
 </template>
 
 <script>
-export default {
-    data(){
-        return {
-          play:true, //显示播放图标 还是暂停图标
-          play_frame_idx:1,//正在播放的第几帧
-          frame_total:10 //一共有多少帧
-        }
-    },
-  mounted(){
-    var vm = this;
-    vm.$eventHub.$on('setFrameTotal',this.setFrameTotal);
-    vm.$eventHub.$on('setPlayFrameIdx',this.setPlayFrameIdx);
-  },
-    methods:{
-        playFunc:function(){
-            if(this.play){
-                this.play = false;
-            }
-            else{
-                this.play = true;
+    export default {
+        data(){
+            return {
+                play:true, //显示播放图标 还是暂停图标
             }
         },
-      setFrameTotal:function(val){
-        this.frame_total = val;
-      },
-      setPlayFrameIdx:function(val){
-        console.log(val)
-        // 如果是在播放的时候,是不能点击手动更改帧的,也一能重置
-        if(val > this.frame_total)
-          this.play_frame_idx = this.frame_total
-        else if( val < 1)
-          this.play_frame_idx = 1;
-        else
-          this.play_frame_idx = val;
-      }
-    }
+        props: {
+            frame_total: {
+                type: Number,
+                required: true
+            },
+            play_frame_idx:{
+                type: Number,
+                required: true
+            }
+        },
+        mounted(){
+            //var vm = this;
+            //vm.$eventHub.$on('setFrameTotal',this.setFrameTotal);
+            //vm.$eventHub.$on('setPlayFrameIdx',this.setPlayFrameIdx);
+        },
+        methods:{
+            playFunc:function(){
+                if(this.play){
+                    this.play = false;
+                }
+                else{
+                    this.play = true;
+                }
+            },
+            setPlayFrameIdx:function(val){
+                console.log(val);
+                this.$eventHub.$emit('setPlayFrameIdx',val);
+            }
+        }
 
-}
-</script>
+    }
+    </script>
