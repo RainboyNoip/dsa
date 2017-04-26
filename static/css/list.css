@@ -61,6 +61,12 @@
   margin:0;
   list-style: none;
 }
+
+.nav li .iconfont {
+  font-size:30px;
+  /*color:black;*/
+}
+
 .nav>li {
   position: relative;
   display: block;
