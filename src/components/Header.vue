@@ -13,7 +13,7 @@
       </div>
     </div>
   <div class ="range-bar header-middle" ref="rangebar">
-      <div class ="progress" style="width:100%" >
+      <div class ="progress" style="width:100%" :style="{cursor:isPlaying?'not-allowed':'pointer'}">
           <template v-for="idx in speed">
               <div class="process-cell process-cell-active" v-on:click="setSpeed(idx)">
               </div>
@@ -54,6 +54,10 @@ export default {
   props: {
     speed:{
       type:Number,
+      required:true
+    },
+    isPlaying:{
+      type:Boolean,
       required:true
     }
   },

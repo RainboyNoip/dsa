@@ -2,11 +2,13 @@
     <div class="wrapper">
         <myheader
             :speed="speed"
+            :isPlaying="isPlaying"
             ></myheader>
         <painter :src="src"></painter>
         <myfooter 
             :frame_total="frame_total"
             :play_frame_idx = "play_frame_idx"
+            :isPlaying="isPlaying"
             ></myfooter>
     </div>
 </template>
@@ -26,9 +28,11 @@ export default {
             isPlaying:false,
             frames:[],
             speed:50,
+            interval:0,
+            delay:2,//ms
             frame_total:10,
-          play_frame_idx:1,
-          dsa_path:''
+            play_frame_idx:1,
+            dsa_path:''
         }
     },
     mounted(){
@@ -37,6 +41,7 @@ export default {
         //事件监听
         self.$eventHub.$on('setPlayFrameIdx',self.setPlayFrameIdx);
         self.$eventHub.$on('setSpeed',self.setSpeed);
+        self.$eventHub.$on('toggle_play',self.toggle_play);
         console.log("开始加载DAS数据:--");
         console.log("要加载的DAS数据地址是:/"+self.dsa_path);
         let base_url = 'dsa/'+self.dsa_path+"/";
@@ -55,6 +60,8 @@ export default {
             self.frames = lineExports.init();
             //设定frame宽度
             self.frame_total = self.frames.length;
+            //设定播放
+            setInterval(self.__play,25);
         })
     },
     methods:{
@@ -77,6 +84,26 @@ export default {
             console.log('当前速度是:'+idx)
             console.log('当前真实速度是:'+speedScale(idx) +"ms")
         },
+        toggle_play:function(){
+            this.isPlaying = this.isPlaying?false:true;
+        },
+        __play:function(){
+            let self = this;
+            let speed_time = speedScale(self.speed);
+            self.interval += 25; // 25ms
+            if( self.interval >+(self.delay + speed_time)){
+                if(self.isPlaying){
+                    if(self.play_frame_idx+1 <= self.frame_total){
+                        self.play_frame_idx++;
+                    }
+                    else {
+                        self.play_frame_idx = 1;
+                        self.isPlaying = false;
+                    }
+                }
+                self.interval = 0;
+            }
+        }
     },
     watch:{
         play_frame_idx:function(newValue,oldValue){
