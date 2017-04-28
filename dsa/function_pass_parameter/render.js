@@ -2,6 +2,7 @@ var gstatus;
 var delay;
 var gbase;
 var gsvg;
+var scaleColor;
 
 //背景数据
 var background_data = [
@@ -123,7 +124,7 @@ function render_init(){
     });
 
   //颜色比例尺
-  var scaleColor = d3.scale.category10();
+  scaleColor = d3.scale.category10();
   this.svg = d3.select("svg").call(zoom);
   gsvg = this.svg;
 

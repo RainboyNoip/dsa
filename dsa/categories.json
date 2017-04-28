@@ -12,6 +12,16 @@
           "href":"function_pass_parameter"
         }
       ]
+    },
+    {
+      "name":"排序算法",
+      "list":[
+        {
+          "name":"冒泡排序",
+          "href":"bubble_sort"
+        }
+      ]
+
     }
   ]
 }
