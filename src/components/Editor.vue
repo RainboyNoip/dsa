@@ -12,7 +12,7 @@ export default {
     data(){
         return{
             options:{
-                fontSize: '18pt',
+                fontSize: '16pt',
                 readOnly:true,
                 highlightActiveLine: false,
                 highlightGutterLine: false
