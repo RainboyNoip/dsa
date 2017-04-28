@@ -31,7 +31,7 @@ export default {
             interval:0,
             delay:2,//ms
             frame_total:10,
-            play_frame_idx:1,
+            play_frame_idx:0,
             dsa_path:''
         }
     },
@@ -60,6 +60,8 @@ export default {
             self.frames = lineExports.init();
             //设定frame宽度
             self.frame_total = self.frames.length;
+          //播放第一帧
+          self.play_frame_idx = 1;
             //设定播放
             setInterval(self.__play,25);
         })
@@ -110,7 +112,7 @@ export default {
             var vm = this;
             console.log(newValue)
             console.log(oldValue)
-            render(vm.frames[newValue-1].status)
+            render(vm.frames[newValue-1].status,speedScale(vm.speed));
             vm.hl(vm.frames[newValue-1].hls,vm.frames[newValue-1].hlt);
         }
     },
