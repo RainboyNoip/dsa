@@ -7,7 +7,7 @@
         </button>
       </div>
       <div class="play-button" title="重置">
-        <button v-on:click="setPlayFrameIdx(1)">
+        <button v-on:click="reset">
           <i class="iconfont icon-zhongzhi"></i>
         </button>
       </div>
@@ -78,6 +78,13 @@
                 return ;
               }
               this.$eventHub.$emit('setPlayFrameIdx',val);
+            },
+            reset:function(){
+                if(this.isPlaying){
+                    return ;
+                }
+                this.$eventHub.$emit("clearMessage");
+                this.setPlayFrameIdx(1);
             }
         }
 

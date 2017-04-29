@@ -99,12 +99,18 @@ export default {
                         self.play_frame_idx++;
                     }
                     else {
-                        self.play_frame_idx = 1;
+                        //self.play_frame_idx = 1;
                         self.isPlaying = false;
                     }
                 }
                 self.interval = 0;
             }
+        },
+        __sendMessage:function(message){
+            this.$eventHub.$emit('sendMessage',message);
+        },
+        __clearMessage:function(){
+            this.$eventHub.$emit('clearMessage');
         }
     },
     watch:{
@@ -122,4 +128,4 @@ export default {
         myfooter
     }
 }
-    </script>
+</script>

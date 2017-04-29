@@ -183,7 +183,25 @@ div.scene {
 .wrapper-code {
     display:flex;
     flex:1;
+    flex-direction:column;
 }
+
+#logger {
+    height: 20%;
+    border-top:2px solid;
+    padding-left:30px;
+    overflow-y:scroll;
+    overflow-x:hidden;
+}
+
+#logger::-webkit-scrollbar{
+    width:0px;
+}
+
+.logger p {
+    margin:5px;
+}
+
 .list {
     margin: 0;
     padding: 0;
