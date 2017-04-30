@@ -27,6 +27,8 @@ function bubble_sort(){
   let tmp;
   for(i=1;i<=sort_data.length-1;i++) //n个数,要进行n-1趟排序
     for(j=0;j<=sort_data.length-i-1;j++){//第i趟排序的最后一个下标:n-i
+      bc_data(j+1,j+1+1);
+      stop(9,13);
       if(sort_data[j].v > sort_data[j+1].v){
         tmp =sort_data[j];
         sort_data[j] =sort_data[j+1];
@@ -47,6 +49,10 @@ function run(){
   for(i=0;i<sort_data.length;i++)
     console.log(sort_data[i].v)
 
+}
+
+function bc_data(p1,p2){
+  currentStatus.bc_data = [{p1:p1,p2:p2}];
 }
 
 function frames_push(s,t){

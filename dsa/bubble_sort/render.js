@@ -31,6 +31,46 @@ function render_init(){
   gsvg = this.svg;
 }
 
+//绘制贝塞尔曲线
+function  _draw_bc(_status,_delay){
+  console.log(_status.bc_data)
+  let bcUpdate = gsvg.selectAll("path.bc").data(_status.bc_data);
+  let bcEnter = bcUpdate.enter();
+  let bcExit = bcUpdate.exit();
+
+
+  bcUpdate
+  .attr("d",function(d){
+    let m =  "M "+
+      (padding.left+(d.p1-1)*rect_w+rect_w/2) + " "+
+      padding.top+" C "+
+      (padding.left+(d.p1-1)*rect_w+rect_w/2) + " "+
+      (padding.top/2)+" "+
+      (padding.left+(d.p2-1)*rect_w+rect_w/2) + " "+
+      (padding.top/2)+" "+
+      (padding.left+(d.p2-1)*rect_w+rect_w/2) + " "+
+      padding.top;
+    console.log(m)
+    return m;
+  });
+
+  bcEnter.append("path")
+  .attr("class","bc")
+  .attr("d",function(d){
+    return "M "+
+      padding.left+(d.p1-1)*rect_w+rect_w/2 + " "+
+      padding.top+" C "+
+      padding.left+(d.p1-1)*rect_w+rect_w/2 + " "+
+      padding.top/2+" "+
+      padding.left+(d.p2-1)*rect_w+rect_w/2 + " "+
+      padding.top/2+" "+
+      padding.left+(d.p2-1)*rect_w+rect_w/2 + " "+
+      padding.top;
+  });
+
+
+  bcExit.remove();
+}
 //数据绘制数据
 function _draw_sort_data(_status,_delay){
   let sortUpdate = gsvg.selectAll("rect.sort")
@@ -118,10 +158,10 @@ function _draw_sort_data_text(_status,_delay){
   })
 
   textExit.remove();
-
 }
 
 function render(_status,_delay){
   _draw_sort_data(_status,_delay);
   _draw_sort_data_text(_status,_delay);
+  _draw_bc(_status,_delay);
 }
