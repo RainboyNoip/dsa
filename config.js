@@ -39,17 +39,20 @@ function _loadScript(url) {
 }
 
 // 动态加载css文件
-function loadStyles(url) {
-  var link = document.createElement("link");
-  link.type = "text/css";
-  link.rel = "stylesheet";
-  link.href = url;
-  document.getElementsByTagName("head")[0].appendChild(link);
+function loadStyle(url) {
+  return new Promise(function(resolve,reject){
+    let link = document.createElement("link");
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.href = url;
+    document.getElementsByTagName("head")[0].appendChild(link);
+    resolve();
+  })
 }
 
 module.exports = {
   loadScript:_loadScript,
-  loadStyles:loadStyles,
+  loadStyle:loadStyle,
   //globalConfig
   speed:50,
   isplaying:false

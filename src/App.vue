@@ -49,7 +49,8 @@ export default {
         Promise.all([
             getSrc(base_url+"algorithm.c"),
             app.loadScript(base_url+'render.js'),
-            app.loadScript(base_url+'line.js')
+            app.loadScript(base_url+'line.js'),
+            app.loadStyle(base_url+'style.css')
         ]).then(function(data){
             console.log('DSA数据加载完毕!')
             self.src = data[0];
