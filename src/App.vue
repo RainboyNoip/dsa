@@ -116,11 +116,13 @@ export default {
     },
     watch:{
         play_frame_idx:function(newValue,oldValue){
-            var vm = this;
-            console.log(newValue)
-            console.log(oldValue)
-            render(vm.frames[newValue-1].status,speedScale(vm.speed));
-            vm.hl(vm.frames[newValue-1].hls,vm.frames[newValue-1].hlt);
+          let  vm = this;
+          console.log('从第',oldValue,'帧到-->第',newValue,'帧');
+          render(vm.frames[newValue-1].status,speedScale(vm.speed));
+          vm.hl(vm.frames[newValue-1].hls,vm.frames[newValue-1].hlt);
+          if(vm.frames[newValue-1].log !== ''){
+            vm.__sendMessage(vm.frames[newValue-1].log,500);
+          }
         }
     },
     components:{

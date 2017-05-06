@@ -18,11 +18,12 @@ function checkStatus ([status,statusText,data]) {
 
 export default{
   get (url, param = {}, headers = {}, host = process.env.api) {
-    console.log(process.env)
-    console.log(process.env.NODE_ENV)
-    console.log(host)
-    console.log(process.env.api)
-    console.log(url)
+    //调试
+    //console.log(process.env)
+    //console.log(process.env.NODE_ENV)
+    //console.log(host)
+    //console.log(process.env.api)
+    //console.log(url)
 
     let reqHeaders = new Headers()
     //reqHeaders.append('Accept', 'application/json')

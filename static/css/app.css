@@ -198,8 +198,8 @@ div.scene {
     width:0px;
 }
 
-.logger p {
-    margin:5px;
+#logger p {
+    margin:1px;
 }
 
 .list {
@@ -347,4 +347,14 @@ div.wrapper-code.main .wrapper{
   position:absolute;
   background:rgba(100,200,100,0.5);
   z-index:20
+}
+
+.explain {
+  position: absolute;
+  display:block;
+  top: 60px;
+  left: 30px;
+}
+.explain .outline {
+  fill:#fff;
 }

@@ -10,8 +10,8 @@ var rect_h=50;
 var rect_w=50;
 
 var padding = {
-  left:100,
-  top:100
+  left:150,
+  top:200
 }
 
 //
@@ -29,7 +29,100 @@ function render_init(){
   scaleColor = d3.scale.category10();
   this.svg = d3.select("svg").call(zoom);
   gsvg = this.svg;
+  explain();
 }
+
+
+var explain_data = {
+  title:'冒泡排序', //标题
+  _explain:[ // 说明数据
+    {
+      title:'无序元素',
+      icon:[
+        {
+          name:"rect",
+          icon:function(selection){
+            selection.attr("fill",sorting)
+            .attr("width",30)
+            .attr("height",10)
+            .attr("stroke","black")
+            .attr("stroke-width","1px")
+          }
+        }
+      ]
+    },
+    {
+      title:'有序元素',
+      icon:[
+        {
+          name:"rect",
+          icon:function(selection){
+            selection.attr("fill",sorted)
+            .attr("width",30)
+            .attr("height",10)
+            .attr("stroke","black")
+            .attr("stroke-width","1px")
+          }
+        }
+      ]
+    }
+  ]
+}
+
+var explain_padding = {
+  top:20,
+  left:50
+}
+
+var explain_postion = {
+ "padding-top":20,
+ "padding-left":50,
+  height:100,
+  width:210
+}
+//增加--说明边框
+function explain(){
+  let expSvg = d3.select("div.scene").append("svg").attr("class","explain")
+  .style("width","210px")
+  .style("height","100px");
+
+  let expSvgRect = expSvg.append("rect")
+  .attr("class","outline")
+  .attr("stroke","black")
+  .attr("x",0)
+  .attr("y",0)
+  .attr("width","200px")
+  .attr("height","90px");
+
+  //创建标题
+  expSvg.append("text")
+  .attr("dx",30)
+  .attr("dy",25)
+  .text(explain_data.title);
+
+
+  for(let i = 0;i < explain_data._explain.length;i++){
+    let expg = expSvg.append("g")
+    .attr('transform',d3Transform().translate(function () {
+        return [20,(i+1)*20+explain_padding.top];
+    }));
+
+    let t_exp = explain_data._explain[i].icon;
+    expg.append("text")
+    .attr("dx",40)
+    .attr("dy",10)
+    .attr("font-size","14px")
+    .attr("text-anchor","start")
+    .text(function(){
+      return explain_data._explain[i].title
+    });
+    for(let j = 0;j<t_exp.length;j++){
+      expg.append(t_exp[j].name)
+        .call(t_exp[j].icon);
+    }
+  }
+}
+
 
 //绘制贝塞尔曲线
 function  _draw_bc(_status,_delay){
@@ -45,9 +138,9 @@ function  _draw_bc(_status,_delay){
       (padding.left+(d.p1-1)*rect_w+rect_w/2) + " "+
       padding.top+" C "+
       (padding.left+(d.p1-1)*rect_w+rect_w/2) + " "+
-      (padding.top/2)+" "+
+      (padding.top-50)+" "+
       (padding.left+(d.p2-1)*rect_w+rect_w/2) + " "+
-      (padding.top/2)+" "+
+      (padding.top-50)+" "+
       (padding.left+(d.p2-1)*rect_w+rect_w/2) + " "+
       padding.top;
     console.log(m)
@@ -57,21 +150,24 @@ function  _draw_bc(_status,_delay){
   bcEnter.append("path")
   .attr("class","bc")
   .attr("d",function(d){
-    return "M "+
-      padding.left+(d.p1-1)*rect_w+rect_w/2 + " "+
+    let m =  "M "+
+      (padding.left+(d.p1-1)*rect_w+rect_w/2) + " "+
       padding.top+" C "+
-      padding.left+(d.p1-1)*rect_w+rect_w/2 + " "+
-      padding.top/2+" "+
-      padding.left+(d.p2-1)*rect_w+rect_w/2 + " "+
-      padding.top/2+" "+
-      padding.left+(d.p2-1)*rect_w+rect_w/2 + " "+
+      (padding.left+(d.p1-1)*rect_w+rect_w/2) + " "+
+      (padding.top-50)+" "+
+      (padding.left+(d.p2-1)*rect_w+rect_w/2) + " "+
+      (padding.top-50)+" "+
+      (padding.left+(d.p2-1)*rect_w+rect_w/2) + " "+
       padding.top;
+    return m;
   });
 
 
   bcExit.remove();
 }
 //数据绘制数据
+var sorted = 'red';
+var sorting = 'yellow';
 function _draw_sort_data(_status,_delay){
   let sortUpdate = gsvg.selectAll("rect.sort")
   .data(_status.sort_data)
@@ -88,6 +184,9 @@ function _draw_sort_data(_status,_delay){
   })
   .attr("y",function(d){
     return padding.top;
+  })
+  .attr("fill",function(d){
+    return (d.sorted)?sorted:sorting;
   })
 
   //enter
@@ -110,6 +209,9 @@ function _draw_sort_data(_status,_delay){
   })
   .attr("stroke","#000")
   .attr("stroke-width","1px")
+  .attr("fill",function(d){
+    return (d.sorted)?sorted:sorting;
+  })
 
   sortExit.remove();
 

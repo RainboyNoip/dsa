@@ -19,9 +19,13 @@
         {
           "name":"冒泡排序",
           "href":"bubble_sort"
+        },
+        {
+          "name":"快速排序",
+          "href":"quickSort"
         }
-      ]
 
+      ]
     }
   ]
 }

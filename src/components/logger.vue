@@ -10,19 +10,22 @@
             }
         },
         mounted(){
-            this.$eventHub.$on('sendMessage',sendMessage);
-            this.$eventHub.$on('clearMessage',clearMessage);
+            this.$eventHub.$on('sendMessage',this.sendMessage);
+            this.$eventHub.$on('clearMessage',this.clearMessage);
         },
         methods:{
-            sendMessage:function(message){
+            sendMessage:function(message,_delay){
+              console.log('hee')
                 let messageBox = $("#logger");
-                messageBox.append("<span>"+ message+"</span>");
-                messageBox.scrollTop(messageBox[0].scrollHeight);
+                messageBox.append("<p>"+ message+"</p>");
+                //messageBox.scrollTop(messageBox[0].scrollHeight);
+              messageBox.animate({
+                scrollTop:messageBox[0].scrollHeight
+              },_delay)
             },
             clearMessage:function(){
                 $("#logger").empty();
             }
-            
         }
     }
 </script>
