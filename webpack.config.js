@@ -40,6 +40,8 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
+    disableHostCheck: true,
+    //public:"192.168.191.2",
     noInfo: true,
     host:'0.0.0.0'
   },
