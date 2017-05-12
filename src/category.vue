@@ -37,16 +37,17 @@
     mounted(){
       //加载json
       let self = this;
-      let json_url = process.env.api+'dsa/categories.json';
+      let json_url = process.env.api+'dsa/categories.txt';
       console.log("加载目录数据!");
       console.log(json_url);
-      $.getJSON(json_url)
+      $.get(json_url)
         .then(function(data){
-          //console.log(data.data)
-          self.categories = data.data;
+          //console.log(data)
+          let ans = self.parseCategory(data);
+          self.categories = ans;
         })
         .fail(function(){
-          console.log('加载'+json_url+'失败','请检查JSON格式');
+          console.log('加载'+json_url+'失败!');
         })
     },
     methods:{
@@ -70,6 +71,27 @@
           var value = hash & 0x7FFFFFFF;
           return value;
       },
+      parseCategory:function(_str){
+        let reg1 = /^([\s\S]+):$/
+        let reg2 = /^\ {4}-([\s\S]+)\|([\s\S]+)$/
+        let _str_array = _str.split('\n')
+        let category = []
+        for(let i =0;i<_str_array.length;i++){
+          if(reg1.test(_str_array[i]))
+            category.push({
+              name: _str_array[i].match(reg1)[1],
+              list:[]
+            })
+            else if(reg2.test(_str_array[i])){
+              let ans = _str_array[i].match(reg2)
+              category[category.length-1].list.push({
+                name:ans[1],
+                href:ans[2]
+              })
+            }
+        }
+        return category;
+      }
     }
   }
 </script>
