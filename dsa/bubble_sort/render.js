@@ -143,7 +143,6 @@ function  _draw_bc(_status,_delay){
       (padding.top-50)+" "+
       (padding.left+(d.p2-1)*rect_w+rect_w/2) + " "+
       padding.top;
-    console.log(m)
     return m;
   });
 

@@ -4,13 +4,16 @@ var gbase;
 var gsvg;
 var scaleColor;
 
-
-
 //开始的位置
 var padding = {
   left:150,
   top:200
 }
+
+//设定的数据
+var sorting = "steelblue";
+var sorted = "red";
+
 
 //左上角说明的数据
 var explain_data = {
@@ -80,7 +83,7 @@ function explain(){
   for(let i = 0;i < explain_data._explain.length;i++){
     let expg = expSvg.append("g")
     .attr('transform',d3Transform().translate(function () {
-        return [20,(i+1)*20+explain_padding.top];
+        return [20,(i+1)*20+explain_postion["padding-top"]];
     }));
 
     let t_exp = explain_data._explain[i].icon;
