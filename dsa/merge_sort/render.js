@@ -20,7 +20,7 @@ var rect_h = 50;
 
 //左上角说明的数据
 var explain_data = {
-  title:'冒泡排序', //标题
+  title:'归并排序', //标题
   _explain:[ // 说明数据
     {
       title:'无序元素',
