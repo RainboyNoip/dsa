@@ -83,11 +83,9 @@
   background-color: #eee;
 }
 .tree-list .nav-list li a {
-  padding-top: 15px;
-  padding-bottom: 15px;
   border-bottom: 1px solid #eeeeee;
-  font-weight: bold; 
-  color: #428bca;
+  /*font-weight: bold; */
+  /*color: #428bca;*/
   text-decoration: none;
 }
 
