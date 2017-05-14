@@ -5,3 +5,4 @@
     - 冒泡排序|bubble_sort
     - 快速排序|quickSort
     - 归并排序-原理|merge_sort_principle
+    - 归并排序|merge_sort
