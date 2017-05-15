@@ -1,8 +1,36 @@
 函数相关:
     - 函数的参数传递|function_pass_parameter
+    - 函数的运行原理|function_principle
     - 递归的原理--未完成|function_pass_parameter
+    - 递归-科赫曲线|koch_curve
 排序算法:
     - 冒泡排序|bubble_sort
     - 快速排序|quickSort
     - 归并排序-原理|merge_sort_principle
     - 归并排序|merge_sort
+搜索算法:
+    - 迷宫-DFS|maze_dfs
+    - 迷宫-BFS|maze_bfs
+    - 八数码-BFS|8numbers
+动态规化:
+    - LIS最长不下降子序列|LIS
+    - LCS最长公共子序列|LCS
+    - 石子合并|stone_dp
+背包专题:
+    - 01背包|01Knapsack
+    - 完全背包|total_knapsack
+    - 混合三种背包|mix_knapsack
+    - 多重背包|multiple_knapsack
+    - 无界背包|m
+    - 二次背包|m
+    - 分组背包|m
+树:
+    - 森林转二叉树|m
+    - 最近公共祖先-LCA|LCA
+    - 最小生成树-Prime|m
+    - 最小生成树-Kruskal|m
+图论:
+    - Floyed-WarShall|Floyed-WarShall
+    - Dijkstra|Dijkstra
+    - Bellman-ford|Bellman-ford
+    - SPFA|SPFA
