@@ -17,7 +17,8 @@
     - LCS最长公共子序列|LCS
     - 石子合并|stone_dp
 背包专题:
-    - 01背包|01Knapsack
+    - 01背包二维|01Knapsack
+    - 01背包一维|01Knapsack1
     - 完全背包|total_knapsack
     - 混合三种背包|mix_knapsack
     - 多重背包|multiple_knapsack

@@ -91,6 +91,7 @@ footer {
   border-right:0.5px solid #000;
   flex:1;
   line-height:40px;
+  font-size:80%;
   text-align:center;
   color:#000;
 }
