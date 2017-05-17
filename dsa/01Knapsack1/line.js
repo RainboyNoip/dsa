@@ -32,6 +32,10 @@ function knapsack(){
   for(i=1;i<=5;i++){
     for(j=10;j>=w[i];j--){
       //比较
+      clear_one();
+      one[j] = 1;
+      one[j-w[i]]= 2;
+      currentStatus.one = one;
       currentStatus.bc = [[j,j-w[i]]];
       stop(15,15,"比较"+"f["+j+"]("+value[j]+")和"+"f["+j+"-"+w[i]+"]"+"+v["+i+"]("+(value[j-w[i]]+v[i])+")的大小");
       if( value[j] < value[j - w[i]] + v[i]){

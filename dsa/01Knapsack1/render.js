@@ -180,9 +180,8 @@ function render_back_one(_status,_delay){
   let btExit  = btUpdate.exit();
 
   btUpdate
-  .transition()
-  .ease("bounce")
-  .duration(_delay)
+  //.transition()
+  //.duration(_delay)
   .attr("fill",function(d){
     if(d == 0)
       return "none"
