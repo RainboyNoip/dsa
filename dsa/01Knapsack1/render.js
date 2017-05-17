@@ -233,7 +233,42 @@ function render_value(_status,_delay){
 function render_bc(_status,_delay){
   let bcUpdate = gsvg.selectAll("path#bc").data(_status.bc);
   let bcEnter = bcUpdate.enter();
-  let bcEixt = bcUpdate.exit();
+  let bcExit = bcUpdate.exit();
+
+  bcUpdate
+  .attr("d",function(d){
+    return "M "+
+      (padding.left+(d[0])*rect_w+rect_w/2) + " "+
+      padding.top+" C "+
+      (padding.left+(d[0])*rect_w+rect_w/2) + " "+
+      (padding.top-rect_h)+" "+
+      (padding.left+(d[1])*rect_w+rect_w/2) + " "+
+      (padding.top-rect_h)+" "+
+      (padding.left+(d[1])*rect_w+rect_w/2) + " "+
+      padding.top;
+  })
+
+
+
+  bcEnter.append("path")
+  .attr("id","bc")
+  .attr("fill","none")
+  .attr("stroke","#000")
+  .attr("stroke-width","2px")
+  .attr("marker-end","url(#arrow)")
+  .attr("d",function(d){
+    return "M "+
+      (padding.left+(d[0])*rect_w+rect_w/2) + " "+
+      padding.top+" C "+
+      (padding.left+(d[0])*rect_w+rect_w/2) + " "+
+      (padding.top-rect_h)+" "+
+      (padding.left+(d[1])*rect_w+rect_w/2) + " "+
+      (padding.top-rect_h)+" "+
+      (padding.left+(d[1])*rect_w+rect_w/2) + " "+
+      padding.top;
+  })
+
+  bcExit.remove();
 }
 
 /* ------------------------ */
@@ -255,6 +290,7 @@ function render_init(){
   gsvg = this.svg;
   explain();
   render_wp_info();
+  render_arrow();
 }
 
 
@@ -262,6 +298,33 @@ function render_init(){
 function render(_status,_delay){
   render_back_one(_status,_delay)
   render_value(_status,_delay)
+  render_bc(_status,_delay)
   //function 2
   //function 3
 }
+
+function render_arrow(){
+  //绘制箭头
+  var defs = this.svg.append("defs");
+
+  var arrowMarker = defs.append("marker")
+    .attr("id","arrow")
+    .attr("markerUnits","strokeWidth")
+    .attr("markerWidth","12")
+    .attr("markerHeight","12")
+    .attr("viewBox","0 0 12 12")
+    .attr("refX","6")
+    .attr("refY","6")
+    .attr("orient","auto");
+
+  var arrow_path = "M2,2 L10,6 L2,10 L6,6 L2,2";
+  arrowMarker.append("path")
+  .attr("d",arrow_path)
+  .attr("fill","#000");
+
+  arrowMarker.append("path")
+    .attr("d",arrow_path)
+    .attr("fill","#000");
+}
+
+
