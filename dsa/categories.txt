@@ -27,8 +27,9 @@
     - 分组背包|m
 树:
     - 森林转二叉树|m
-    - 最近公共祖先-LCA|LCA
-    - 最小生成树-Prime|m
+    - LCA离线算法-tarjan|lca-tarjan
+    - LCA在线算法|lca-rmq
+    - 最小生成树-Prim|prim
     - 最小生成树-Kruskal|m
 图论:
     - Floyed-WarShall|Floyed-WarShall
