@@ -170,6 +170,8 @@ function __init__(){
   currentStatus.tree_data =vis;
   currentStatus.fa=fa;
   currentStatus.ans=ans;
+  currentStatus.now=[];
+
 }
 
 lineExports = {
