@@ -59,7 +59,8 @@ var qsize = -1;
 
 function find(x){
   if(fa[x] == x)  return x;
-  return find(fa[x])
+  fa[x]  = find(fa[x])
+  return fa[x]
 }
 
 function addQuery(x,y,num){
@@ -97,6 +98,11 @@ function tarjan(x){
     currentStatus.now = [x];//正在访问的点
     stop(59,61,"回到点:"+x)
   }
+
+  vis[x-1] = 1; // flag
+  currentStatus.tree_data = vis
+  stop(71,71,"点:"+x+" 已经访问过")
+
   for(i=qhead[x];i!=-1;i=query[i].next){
     y= query[i].v;
     if(vis[y-1] == 1){
@@ -105,9 +111,6 @@ function tarjan(x){
       stop(69,69,"找到一个答案,lca("+x+","+y+"):"+ans[ query[i].num ]);
     }
   }
-  vis[x-1] = 1; // flag
-  currentStatus.tree_data = vis
-  stop(71,71,"点:"+x+" 已经访问过")
 }
 
 function main(){

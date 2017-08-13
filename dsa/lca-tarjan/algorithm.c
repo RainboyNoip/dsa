@@ -63,12 +63,12 @@ void tarjan(int x){
     //x是正在访问的点
     //如果另外一个点u已经访问过
     //那lca(x,u) == fa[u]
+    vis[x]=1;//标记 放在这里的原因是用来求 lca(6,6)这样的点
     for(i=qhead[x];i!=-1;i=q[i].next){
         y = q[i].v;
         if( vis[y])
             ans[q[i].num] =find(y);
     }
-    vis[x]=1;//标记
 }
 
 int main(){
