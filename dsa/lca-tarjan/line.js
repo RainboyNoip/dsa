@@ -101,7 +101,7 @@ function tarjan(x){
 
   vis[x-1] = 1; // flag
   currentStatus.tree_data = vis
-  stop(71,71,"点:"+x+" 已经访问过")
+  stop(66,66,"点:"+x+" 已经访问过")
 
   for(i=qhead[x];i!=-1;i=query[i].next){
     y= query[i].v;
