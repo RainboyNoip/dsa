@@ -157,7 +157,7 @@ function km(){
       if(A[i] < w[i][j]){
         A[i] = w[i][j]
         change_edge_color(i,pre_j,0.2);
-        change_edge_color(i,j,1);
+        change_edge_color(i,j,2);
         pre_j = j;
       }
     }
