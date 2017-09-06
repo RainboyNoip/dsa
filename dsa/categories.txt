@@ -31,8 +31,14 @@
     - LCA在线算法|lca-rmq
     - 最小生成树-Prim|prim
     - 最小生成树-Kruskal|m
+    - 线段树-建树|segment_tree_build
+    - 线段树-单点更新|segment_tree_range_update
+    - 线段树-区间查询|segment_tree_range_update
+    - 线段树-区间更新|segment_tree_range_update
 图论:
     - Floyed-WarShall|Floyed-WarShall
     - Dijkstra|Dijkstra
     - Bellman-ford|Bellman-ford
     - SPFA|SPFA
+    - 二分图-最大匹配|m
+    - 二分图-最佳匹配|bipartite_graph_best_match
