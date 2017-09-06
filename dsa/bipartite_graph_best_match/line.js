@@ -225,6 +225,12 @@ function km(){
   let ans = 0;
   for( i = 0 ;i< n;i++)
     ans += w[match[i]][i];
+  //修改其它边的的颜色
+  for( let x1 = 0; x1 <n;x1++)
+    for( let y1 = 0; y1 <n;y1++){
+      if( x1 != match[y1])
+        change_edge_color(x1,y1,0);
+    }
   stop(80,83,"找到最佳匹配,所有匹配边加起和为:"+ans)
   return ans;
 }
