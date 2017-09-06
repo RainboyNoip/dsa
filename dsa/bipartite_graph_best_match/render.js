@@ -114,7 +114,10 @@ function explain(){
 function render_visx_point(_status,_delay){
   let xp = gsvg.selectAll("circle#xp").data(_status.visx)
 
-  xp.attr("fill",function(d,i){
+  xp
+  .transition()
+  .duration(_delay)
+    .attr("fill",function(d,i){
     if( d == 0)
       return "none"
     else 
@@ -135,7 +138,10 @@ function render_visx_point(_status,_delay){
 function render_visy_point(_status,_delay){
   let yp = gsvg.selectAll("circle#yp").data(_status.visy)
 
-  yp.attr("fill",function(d,i){
+  yp
+  .transition()
+  .duration(_delay)
+    .attr("fill",function(d,i){
     if( d == 0)
       return "none"
     else 
@@ -176,6 +182,8 @@ function render_path_color(_status,_delay){
   let pc = bsvg.selectAll("line#color").data(_status.path_c)
 
   pc.attr("stroke",function(d){
+    if( d[2] == 2)
+      return "rgba(0,255,0,2)"
     return "rgba(0,0,0,"+d[2]+")"
   })
 

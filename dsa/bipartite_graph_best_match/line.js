@@ -94,6 +94,16 @@ function change_edge_grow(i,j){
   }
 }
 
+function change_edge_grow_del(i,j){
+  for(let k = 0 ;k< path_c.length;k++){
+    if( path_c[k][0] == i+1 && path_c[k][1] == j+1){
+      path_c[k][3] = 0;
+      break
+    }
+  }
+}
+
+
 function clear_edge_grow(i,j){
   for(let k = 0 ;k< path_c.length;k++){
       path_c[k][3] = 0;
@@ -116,18 +126,22 @@ function dfs(u){
       if( match[v] == -1 ){
         match[v] = u;
         stop(36,36,"点:y"+(v+1)+"是未匹配点,寻找增广路成功,修改math["+(v+1)+"]的值")
+        change_edge_grow_del(u,v);
         return true;
       }
       else {
         stop(36,36,"点:y"+(v+1)+"是匹配点,从它对应的点:x"+(match[v]+1)+"继续开始寻找增广路")
         if( dfs(match[v])){
           match[v] = u;
+          change_edge_grow_del(u,v);
           return true;
+        }
+        else { // 失败
+          change_edge_grow_del(u,v);
         }
       }
     }
   }
-
   stop(41,41,"从点:x"+(u+1)+"寻找增广路失败,没有一个未访问的点y满足条件:A["+(u+1)+"]+B[y] == w["+(u+1)+"][y]")
   return false;
 }
@@ -171,16 +185,24 @@ function km(){
       else {
         clear_edge_grow();
         deal_match();
-        stop(0,0,"寻找增广路失败,开始修改顶标")
+        stop(63,76,"寻找增广路失败,开始修改顶标")
       }
 
       let d = 0x7fffffff
+      let tx,ty;
       for(i=0;i<n;i++)
         if(visx[i])
           for(j=0;j<n;j++){
-            if( visy[j] == 0)
+            if( visy[j] == 0){
+              if( d > A[i]+B[j] - w[i][j] ){
+                tx = i;
+                ty = j;
+              }
               d = min(A[i]+B[j] - w[i][j],d)
+            }
           }
+      change_edge_color(tx,ty,2)
+      stop(63,69,"左部失败增广路径上的点的其它边的最小边权:"+d)
 
       //更改标号
       for(i=0;i<n;i++){
@@ -189,6 +211,8 @@ function km(){
         if(visy[i])
           B[i] +=d;
       }
+      stop(71,76,"失败增广路径上的x点A顶标减少:"+d+",y点顶标增加:"+d)
+      change_edge_color(tx,ty,0.2)
     }
   }
 
