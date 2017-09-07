@@ -45,7 +45,7 @@ function pushdown(rt,m){
     stop(13,18,"这个点有标记,用这个标记更新原始树上对应点的儿子的值,并把标记压下.有标记的点对应的原始点一定被更新值")
   }
   else{
-    stop(19,19,"这个点没有标记,不用更新")
+    stop(13,13,"这个点没有标记,不用更新")
     //不用更新
   }
 }
@@ -56,38 +56,48 @@ function pushdown(rt,m){
 // l,r ,rt 当前的点,和当前下标
 function update(l1,r1,c,l,r,rt){
   currentStatus.tree1_arrow = [rt]
-  stop(20,20,"来到点: "+rt)
+  stop(20,20,"更新区间,来到点: "+rt)
   if(l1 <= l && r <= r1){ // 包含
-    stop(21,21,"点:"+rt+"代表的区间在要查询的区间["+l1+","+r1+"]内");
+    stop(21,21,"点:"+rt+"代表的区间["+l+","+r+"]被更新的区间["+l1+","+r1+"]内,要被更新");
     fst[rt] = c;
     st[rt] = (r-l+1)*c;
+    currentStatus.tree2_arrow = [rt]
     stop(22,24,"改变这个点的值为:("+r+"-"+l+"+1)*"+c+"="+st[rt]+",修改对应的标记点为:"+fst[rt]);
     return ;
   }
+  stop(21,21,"当前点: "+rt+" 代表的区间["+l+","+r+"]不被要更新的区间["+l1+","+r1+"]包含,不用被更新")
   currentStatus.tree2_arrow = [rt]
   stop(26,26,"标记树来到点: "+rt+",如果有标记就把标记压下")
   pushdown(rt,(r-l+1)); //这个点是不是有标记,有就下
   let m = (l+r) >>1;
   if(l1 <= m ) {
-    stop(41,41,"因为:"+l1+"<="+m+",所有有一剖分区间在左孩子上")
+    stop(28,28,"因为l1:"+l1+"<=m:"+m+"成立,所以点:"+rt+"的左孩子:"+lson(rt)+"代表的区间["+(l)+","+m+"]有部分在更新区间["+l1+","+r1+"]内,要更新它")
     update(l1,r1,c,l,m,lson(rt));
   }
+  else
+    stop(28,28,"因为l1:"+l1+"<=m:"+m+"不成立,所以点:"+rt+"的左孩子:"+lson(rt)+"代表的区间["+(l)+","+m+"]不在更新区间["+l1+","+r1+"]内,不用更新它")
+
   if(r1 > m ) {
-    stop(42,42,"因为:"+r1+">"+m+",所有有一剖分区间在右孩子上")
+    stop(29,29,"因为r1:"+r1+">m:"+m+"成立,所以点:"+rt+"的右孩子:"+rson(rt)+"代表的区间["+(m+1)+","+r+"]有部分在更新区间["+l1+","+r1+"]内,要更新它")
     update(l1,r1,c,m+1,r,rson(rt));
+  }
+  else {
+    stop(29,29,"因为r1:"+r1+">m:"+m+"不成立,所以点:"+rt+"的右孩子:"+rson(rt)+"代表的区间["+(m+1)+","+r+"]不在更新区间["+l1+","+r1+"]内,不用更新它")
   }
   pushup(rt);
   currentStatus.tree1_arrow = [rt]
-  stop(30,30,"回到父节点:"+rt+",根据左右孩子更新自己为:"+st[rt]);
+  stop(30,30,"回到父节点:"+rt+",根据左右孩子的值更新自己为:"+st[rt]);
 }
 
 //路过就更新
 function query(l1,r1,l,r,rt){
   currentStatus.tree1_arrow = [rt]
-  stop(20,20,"查询,来到点: "+rt)
+  stop(32,32,"查询,来到点: "+rt)
   if(l1 <= l && r <= r1){//包含
+    stop(34,34,"点:"+rt+"代表的区间["+l+","+r+"]被查询的区间["+l1+","+r1+"]包含,返回它的值:"+st[rt]);
     return st[rt];
   }
+  stop(33,33,"当前点: "+rt+" 代表的区间["+l+","+r+"]不被查询区间["+l1+","+r1+"]包含,所以不用返回值")
 
   //路过
   currentStatus.tree2_arrow = [rt]
@@ -96,10 +106,24 @@ function query(l1,r1,l,r,rt){
 
   let ret = 0;
   let m = (l+r) >>1;
-  if(l1 <= m ) ret += query(l1,r1,l,m,lson(rt));
-  if( r1 > m ) ret += query(l1,r1,m+1,r,rson(rt));
+  if(l1 <= m ) {
+    stop(41,41,"因为l1:"+l1+"<=m:"+m+"成立,所以点:"+rt+"的左孩子:"+lson(rt)+"代表的区间["+(l)+","+m+"]有部分在查询区间["+l1+","+r1+"]内,要查询它")
+    ret += query(l1,r1,l,m,lson(rt));
+    currentStatus.tree1_arrow = [rt]
+    stop(41,41,"返回父节点:"+(rt))
+  }
+  else {
+    stop(41,41,"因为l1:"+l1+"<=m:"+m+"不成立,所以点:"+rt+"的左孩子:"+lson(rt)+"代表的区间["+(l)+","+m+"]不在查询区间["+l1+","+r1+"]内,不用查询它")
+  }
+  if( r1 > m ) {
+    stop(42,42,"因为r1:"+r1+">m:"+m+"成立,所以点:"+rt+"的右孩子:"+rson(rt)+"代表的区间["+(m+1)+","+r+"]有部分在查询区间["+l1+","+r1+"]内,要查询它")
+    ret += query(l1,r1,m+1,r,rson(rt));
+  }
+  else{
+    stop(42,42,"因为r1:"+r1+">m:"+m+"不成立,所以点:"+rt+"的右孩子:"+rson(rt)+"代表的区间["+(m+1)+","+r+"]不在查询区间["+l1+","+r1+"]内,不用查询它")
+  }
   currentStatus.tree1_arrow = [rt]
-  stop(43,43,"查询,返回到点: "+rt+",并返回值:"+ret)
+  stop(43,43,"左右孩子查询完毕,返回左右孩子查询值的和:"+ret)
   return ret;
 }
 
