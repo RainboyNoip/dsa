@@ -30,7 +30,7 @@ bool dfs(int u){
     visx[u] = true;
     int v;
     for(v=1;v<=n;v++){
-        if( !visy[v] && A[u]+B[u] == w[u][v]){
+        if( !visy[v] && A[u]+B[v] == w[u][v]){
             visy[v] = true;
             if( match[v] == -1 || dfs(match[v])){
                 match[v] = u;
