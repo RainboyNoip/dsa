@@ -1,7 +1,7 @@
 函数相关:
     - 函数的参数传递|function_pass_parameter
     - 函数的运行原理|function_principle
-    - 递归的原理--未完成|function_pass_parameter
+    - 递归的原理:factorial|factorial
     - 递归-科赫曲线|koch_curve
 排序算法:
     - 冒泡排序|bubble_sort
@@ -12,6 +12,9 @@
     - 迷宫-DFS|maze_dfs
     - 迷宫-BFS|maze_bfs
     - 八数码-BFS|8numbers
+分治算法:
+    - lower_bound|m
+    - upper_bound|m
 动态规化:
     - LIS最长不下降子序列|LIS
     - LCS最长公共子序列|LCS
@@ -42,3 +45,5 @@
     - SPFA|SPFA
     - 二分图-最大匹配|m
     - 二分图-最佳匹配|bipartite_graph_best_match
+其它:
+    - 生命游戏-Life Game|lifeGame
