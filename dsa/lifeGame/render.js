@@ -310,7 +310,7 @@ function auto_live(){
 //播放音乐
 
 var audio = `
-<audio id="audio" src="dsa/lifeGame/Game_of_Thrones_8-bit.mp3" autoplay="autoplay" loop="loop">
+<audio id="audio" src="dsa/lifeGame/FFF_-_7SinsUnlocker.mp3" autoplay="autoplay" loop="loop">
 `
 
 function add_music(){
