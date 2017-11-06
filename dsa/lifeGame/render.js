@@ -16,6 +16,7 @@ var _data = []; //数据
 var fill_color = "rgba(0,0,0,0.6)"
 var time = 200
 var isRendering = false
+var Interval=null
 
 
 //开始的位置
@@ -133,6 +134,7 @@ function render_init(){
   __hideElem("div#logger")
   __hideElem("header")
   __hideElem("footer")
+  ext_html()
 
   this.svg = d3.select("svg");
   gsvg = this.svg;
@@ -141,6 +143,7 @@ function render_init(){
   console.log("一个活细胞周围有2,3个活细胞,它保持不变")
   console.log("一个活细胞周围有超过3个活细胞,它会因为拥挤而死")
   console.log("一个死细胞周围有3个活细胞,它复活")
+
 
   __getInitVal()
   render_back()   //生成背景
@@ -166,11 +169,10 @@ function __hideElem(Ele){
 }
 
 function __getInitVal(){
-  let __gsvg = document.getElementsByTagName("svg")[0]
 
-  let ___gsvg = window.getComputedStyle(__gsvg)
-  height = parseInt(___gsvg.height.slice(0,-2));
-  width = parseInt(___gsvg.width.slice(0,-2));
+  let ___gsvg =$("svg")
+  height = parseInt(___gsvg.height());
+  width = parseInt(___gsvg.width());
   console.log("svg height:",height)
   console.log("svg width:",width)
   _wc = parseInt(width / _w)
@@ -291,9 +293,9 @@ function __neighborhood(x,y){
 }
 
 
-//自动生活
+//自动运行
 function auto_live(){
-  setInterval(function(){
+  Interval = setInterval(function(){
     if( isRendering == true)
       return;
     isRendering= true;
@@ -304,3 +306,86 @@ function auto_live(){
 }
 
 
+//增强的html
+var _ext_html = '\
+<div class="tools">\
+  <ul>\
+    <li><button id="random">随机生成</button></li>\
+    <li><button id="toggle_auto_life">切换自动</button></li>\
+    <li><button id="still_lifes">Still lifes</button></li>\
+    <li><button id="oscillators">Oscillators</button></li>\
+    <li><button id="spaceships">Spaceships</button></li>\
+    <li><button id="gliderGun">Glider gun</button></li>\
+  </ul>\
+</div>\
+'
+
+var _ext_style=`
+.tools {
+  position:absolute;
+  height:8px;
+  background:#000;
+  width:50px;
+  padding:0px;
+  text-align:center;
+  overflow:hidden;
+  left:50%;
+}
+
+.tools:hover {
+  background:#eee;
+  height:40px;
+  width:100%;
+  left:0;
+}
+.tools ul {
+  padding:0px;
+  margin:0;
+  list-style:none;
+}
+
+.tools ul li{
+  display:inline-block;
+}
+`
+
+function ext_html(){
+  $("div.wrapper-row").prepend(_ext_html)
+  $("<style><style>").text(_ext_style).appendTo($("head"));
+  $("button#toggle_auto_life").click(toggle_auto_life)
+  $("button#random").click(button_random_life)
+
+}
+
+
+function toggle_auto_life(){
+  if( Interval == null){
+    isRendering = false;
+    auto_live()
+  }
+  else{
+    clearInterval(Interval)
+    Interval = null;
+  }
+}
+
+function button_random_life(){
+  let pre_isRendering= false;
+  if(Interval != null){
+    toggle_auto_life()
+    pre_isRendering = true;
+  }
+  random_life()
+  render_life()
+  if( pre_isRendering)
+    toggle_auto_life()
+
+}
+
+var still_life = [
+  "000000000000000000000000000",
+  "011000011000011000000000000",
+  "011000100100100100000000000",
+  "000000011000010100000000000",
+  "000000000000001000000000000",
+]
