@@ -334,12 +334,13 @@ function toggle_music_play(){
 var _ext_html = '\
 <div class="tools">\
   <ul>\
+    <li><button id="wiki"><a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">wiki</a></button></li>\
     <li><button id="random">随机生成</button></li>\
     <li><button id="toggle_auto_life">切换自动</button></li>\
     <li><button id="still_lifes">Still lifes</button></li>\
     <li><button id="oscillators">Oscillators</button></li>\
     <li><button id="spaceships">Spaceships</button></li>\
-    <li><button id="gliderGun">Glider gun</button></li>\
+    <li><button id="gliderGun">Gosper glider gun</button></li>\
     <li><button id="play">■</button></li>\
   </ul>\
 </div>\
@@ -355,6 +356,7 @@ var _ext_style=`
   text-align:center;
   overflow:hidden;
   left:50%;
+  border:2px solid #000;
 }
 
 .tools:hover {
@@ -362,6 +364,7 @@ var _ext_style=`
   height:40px;
   width:100%;
   left:0;
+  border:0px;
 }
 .tools ul {
   padding:0px;
@@ -378,6 +381,7 @@ function ext_html(){
   $("div.wrapper-row").prepend(_ext_html)
   $("<style><style>").text(_ext_style).appendTo($("head"));
   $("button#toggle_auto_life").click(toggle_auto_life)
+  $("button#gliderGun").click(gliderGun_set)
   $("button#random").click(button_random_life)
   $("button#play").click(toggle_music_play)
 
@@ -415,3 +419,73 @@ var still_life = [
   "000000011000010100000000000",
   "000000000000001000000000000",
 ]
+
+var Oscillators = [
+  "00000000000000",
+  "00000000000000",
+  "00000000000000",
+  "00000000000000",
+  "00000000000000",
+  "00000000000000",
+]
+
+var gliderGun = [
+  "00000000000000000000000000000000000000",
+  "00000000000000000000000001000000000000",
+  "0000000000000000000000010100000000000",
+  "00000000000001100000011000000000000110",
+  "00000000000010001000011000000000000110",
+  "01100000000100000100011000000000000000",
+  "01100000000100010110000101000000000000",
+  "00000000000100000100000001000000000000",
+  "00000000000010001000000000000000000000",
+  "00000000000001100000000000000000000000",
+  "00000000000000000000000000000000000000",
+]
+
+
+function clear_life(){
+  let i,j;
+  for(i=0;i<=_hc;i++){
+    for(j=0;j<=_wc;j++)
+      _data[i][j] = 0;
+  }
+}
+
+function get_array_size(arr){
+  let h = arr.length
+  let w = arr[0].length
+  return {
+    h:h,
+    w:w
+  }
+}
+
+function gliderGun_set(){
+  let _size = get_array_size(gliderGun)
+
+  if( _size.h+1>_hc || _size.w+1 > _wc){
+    alert("棋盘太小,显示不了!");
+    return 0;
+  }
+
+
+  let pre_isRendering= false;
+  if(Interval != null){
+    toggle_auto_life()  //停
+    pre_isRendering = true;
+  }
+  clear_life()
+
+  let i,j;
+  for(i=0;i<gliderGun.length;i++)
+    for(j=0;j<gliderGun[i].length;j++)
+      _data[i][j] = gliderGun[i][j]=='1'?1:0;
+
+  render_life()
+  if( pre_isRendering)
+    toggle_auto_life() //启动
+
+}
+
+
