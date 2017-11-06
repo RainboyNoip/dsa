@@ -135,6 +135,7 @@ function render_init(){
   __hideElem("header")
   __hideElem("footer")
   ext_html()
+  add_music()
 
   this.svg = d3.select("svg");
   gsvg = this.svg;
@@ -306,6 +307,29 @@ function auto_live(){
 }
 
 
+//播放音乐
+
+var audio = `
+<audio id="audio" src="dsa/lifeGame/Game_of_Thrones_8-bit.mp3" autoplay="autoplay" loop="loop">
+`
+
+function add_music(){
+  $('body').append(audio)
+}
+
+function toggle_music_play(){
+  let t = $(this).text()
+  let player = $("#audio")[0];
+  if( t == '■'){
+    $(this).text("▶")
+     player.pause()
+  }
+  else{
+    $(this).text("■")
+     player.play()
+  }
+}
+
 //增强的html
 var _ext_html = '\
 <div class="tools">\
@@ -316,6 +340,7 @@ var _ext_html = '\
     <li><button id="oscillators">Oscillators</button></li>\
     <li><button id="spaceships">Spaceships</button></li>\
     <li><button id="gliderGun">Glider gun</button></li>\
+    <li><button id="play">■</button></li>\
   </ul>\
 </div>\
 '
@@ -354,6 +379,7 @@ function ext_html(){
   $("<style><style>").text(_ext_style).appendTo($("head"));
   $("button#toggle_auto_life").click(toggle_auto_life)
   $("button#random").click(button_random_life)
+  $("button#play").click(toggle_music_play)
 
 }
 
