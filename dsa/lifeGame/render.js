@@ -336,12 +336,16 @@ var _ext_html = '\
   <ul>\
     <li><button id="wiki"><a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">wiki</a></button></li>\
     <li><button id="introduce"><a href="https://www.bilibili.com/video/av11279860/" target="_blank">介绍</a></button></li>\
+    <li><h6 id="show_time">速度'+time+'ms</h6></li>\
+    <li><button id="add">加速(先暂停)</button></li>\
+    <li><button id="sub">减速(先暂停)</button></li>\
     <li><button id="random">随机生成</button></li>\
     <li><button id="toggle_auto_life">切换自动</button></li>\
     <li><button id="still_lifes">Still lifes</button></li>\
     <li><button id="oscillators">Oscillators</button></li>\
     <li><button id="spaceships">Spaceships</button></li>\
     <li><button id="gliderGun">Gosper glider gun</button></li>\
+    <li><button id="selftouch">自定义模式(没有写呢)</button></li>\
     <li><button id="play">■</button></li>\
   </ul>\
 </div>\
@@ -358,6 +362,11 @@ var _ext_style=`
   overflow:hidden;
   left:50%;
   border:2px solid #000;
+}
+
+.tools h6 {
+  margin:0;
+  padding:0;
 }
 
 .tools:hover {
@@ -381,11 +390,37 @@ var _ext_style=`
 function ext_html(){
   $("div.wrapper-row").prepend(_ext_html)
   $("<style><style>").text(_ext_style).appendTo($("head"));
+  $("button#sub").click(_add)
+  $("button#add").click(_sub)
   $("button#toggle_auto_life").click(toggle_auto_life)
+  $("button#still_lifes").click(still_life_set)
+  $("button#oscillators").click(Oscillators_life_set)
   $("button#gliderGun").click(gliderGun_set)
   $("button#random").click(button_random_life)
+  $("button#spaceships").click(Spaceships_life_set)
   $("button#play").click(toggle_music_play)
 
+}
+
+function _set_time_display(){
+  $("h6#show_time").text("速度:"+time+"ms")
+}
+
+function _add(){
+  if(time+200>=5000){
+    time = 5000;
+  }
+  else
+    time+=200
+  _set_time_display()
+}
+
+function _sub(){
+  if( time-200 <=100)
+    time=200;
+  else
+    time-=200;
+  _set_time_display()
 }
 
 
@@ -414,21 +449,54 @@ function button_random_life(){
 }
 
 var still_life = [
-  "000000000000000000000000000",
-  "011000011000011000000000000",
-  "011000100100100100000000000",
-  "000000011000010100000000000",
-  "000000000000001000000000000",
+  "00000000000000000000000000000",
+  "01100001100001100001100001000",
+  "01100010010010010001010010100",
+  "00000001100001010000100001000",
+  "00000000000000100000000000000",
 ]
 
 var Oscillators = [
-  "00000000000000",
-  "00000000000000",
-  "00000000000000",
-  "00000000000000",
-  "00000000000000",
-  "00000000000000",
+  "000000000000000000000000000000000000",
+  "000000000000000000000000000000000000",
+  "000000011100011000000000000000000000",
+  "011100111000011000000000000001110000",
+  "000000000000000110000000000010001000",
+  "000000000000000110000000000010001000",
+  "000000000000000000000000000001110000",
+  "000000000000000000000000000000000000",
+  "000000000000000000000000000000000000",
+  "000000011100011100000000000000000000",
+  "000000000000000000000000000000000000",
+  "000001000010100001000000000001110000",
+  "000001000010100001000000000010001000",
+  "000001000010100001000000000010001000",
+  "000000011100011100000000000001110000",
+  "000000000000000000000000000000000000",
+  "000000011100011100000000000000000000",
+  "000001000010100001000000000000000000",
+  "000001000010100001000000000000000000",
+  "000001000010100001000000000000000000",
+  "000000000000000000000000000000000000",
+  "000000011100011100000000000000000000",
+  "000000000000000000000000000000000000",
+  "000000000000000000000000000000000000",
 ]
+
+
+
+var Spaceships = [
+  "0000000000000000000000000000000",
+  "0001000000000000000000000000000",
+  "0000110000000001111000000000000",
+  "0001100000000010001000000000000",
+  "0000000000000000001000000000000",
+  "0000000000000010010000000000000",
+  "0000000000000000000000000000000",
+  "0000000000000000000000000000000",
+]
+
+
 
 var gliderGun = [
   "00000000000000000000000000000000000000",
@@ -489,4 +557,84 @@ function gliderGun_set(){
 
 }
 
+function still_life_set(){
+  let _size = get_array_size(still_life)
 
+  if( _size.h+1>_hc || _size.w+1 > _wc){
+    alert("棋盘太小,显示不了!");
+    return 0;
+  }
+
+
+  let pre_isRendering= false;
+  if(Interval != null){
+    toggle_auto_life()  //停
+    pre_isRendering = true;
+  }
+  clear_life()
+
+  let i,j;
+  for(i=0;i<still_life.length;i++)
+    for(j=0;j<still_life[i].length;j++)
+      _data[i][j] = still_life[i][j]=='1'?1:0;
+
+  render_life()
+  if( pre_isRendering)
+    toggle_auto_life() //启动
+
+}
+
+
+function Oscillators_life_set(){
+  let _size = get_array_size(Oscillators)
+
+  if( _size.h+1>_hc || _size.w+1 > _wc){
+    alert("棋盘太小,显示不了!");
+    return 0;
+  }
+
+
+  let pre_isRendering= false;
+  if(Interval != null){
+    toggle_auto_life()  //停
+    pre_isRendering = true;
+  }
+  clear_life()
+
+  let i,j;
+  for(i=0;i<Oscillators.length;i++)
+    for(j=0;j<Oscillators[i].length;j++)
+      _data[i][j] =Oscillators[i][j]=='1'?1:0;
+
+  render_life()
+  if( pre_isRendering)
+    toggle_auto_life() //启动
+
+}
+
+function Spaceships_life_set(){
+  let _size = get_array_size(Spaceships)
+
+  if( _size.h+1>_hc || _size.w+1 > _wc){
+    alert("棋盘太小,显示不了!");
+    return 0;
+  }
+
+
+  let pre_isRendering= false;
+  if(Interval != null){
+    toggle_auto_life()  //停
+    pre_isRendering = true;
+  }
+  clear_life()
+
+  let i,j;
+  for(i=0;i<Spaceships.length;i++)
+    for(j=0;j<Spaceships[i].length;j++)
+      _data[i][j] =Spaceships[i][j]=='1'?1:0;
+
+  render_life()
+  if( pre_isRendering)
+    toggle_auto_life() //启动
+
+}
