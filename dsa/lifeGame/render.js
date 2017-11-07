@@ -335,6 +335,7 @@ var _ext_html = '\
 <div class="tools">\
   <ul>\
     <li><button id="wiki"><a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">wiki</a></button></li>\
+    <li><button id="introduce"><a href="https://www.bilibili.com/video/av11279860/" target="_blank">介绍</a></button></li>\
     <li><button id="random">随机生成</button></li>\
     <li><button id="toggle_auto_life">切换自动</button></li>\
     <li><button id="still_lifes">Still lifes</button></li>\
