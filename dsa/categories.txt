@@ -46,4 +46,5 @@
     - 二分图-最大匹配|m
     - 二分图-最佳匹配|bipartite_graph_best_match
 其它:
+    - 递归-黄金螺旋|Golden_Spiral
     - 生命游戏-Life Game|lifeGame
