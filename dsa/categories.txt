@@ -11,6 +11,8 @@
 搜索算法:
     - 迷宫-DFS|maze_dfs
     - 迷宫-BFS|maze_bfs
+    - 4皇后-游戏-DFS|4queen1
+    - 4皇后-演示-DFS|4queen2
     - 八数码-BFS|8numbers
 分治算法:
     - lower_bound|m

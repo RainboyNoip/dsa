@@ -4,6 +4,11 @@ var gbase;
 var gsvg;
 var scaleColor;
 
+
+//******************* 全局设定,参数
+
+//*******************
+
 //开始的位置
 var padding = {
   left:150,
