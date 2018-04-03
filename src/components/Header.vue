@@ -3,12 +3,12 @@
     <div class ="header-left play-button-c">
       <div class="play-button" title="减速">
         <button v-on:click="setSpeed(speed-10)">
-          <i class="iconfont icon-icon"></i>
+          <i class="iconfont icon-kuai"></i>
         </button>
       </div>
       <div class="play-button" title="加速">
         <button v-on:click="setSpeed(speed+10)">
-          <i class="iconfont icon-kuai"></i>
+          <i class="iconfont icon-icon"></i>
         </button>
       </div>
     </div>

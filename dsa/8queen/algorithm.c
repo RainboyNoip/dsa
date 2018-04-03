@@ -1,4 +1,5 @@
 /* 8皇后-DFS算法 -by Rainboy 2018-04-03 17:10 */
+/* 输出一处可能方案 */
 #include <cstdio>
 
 #define queen_size 8 //queen的数量
@@ -34,19 +35,21 @@ bool is_right(int x,int y){
 
 
 //参数x 表示在第x行尝试放一个queen
-void dfs(int x){
+bool dfs(int x){
     if(x > n){ // 边界:来到n+1行,表示前n行都放好了
         cnt++; //记录一次成功的方案
-        return ;
+        return true;
     }
     int i;
     for(i = 1;i <= n;i++){
         if( is_right(x,i)){ //可以放
             set(x,i);
-            dfs(x+1);
+            if( dfs(x+1) )
+              return true;
             un_set(x,i);
         }
     }
+    return false;
 }
 
 

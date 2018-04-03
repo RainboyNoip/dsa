@@ -36,6 +36,9 @@ export default {
         }
     },
     mounted(){
+
+        window.VM = this; // 暴露自己的API 给全局
+
         let self = this;
         self.dsa_path=self.$route.params.id;
         //事件监听
@@ -55,19 +58,27 @@ export default {
             console.log('DSA数据加载完毕!')
             self.src = data[0];
         }).then(function(){ // 初始化render.js
-            console.log("运行_reader_init");
-            render_init();
-            console.log('生成frames数据完成!');
-            self.frames = lineExports.init();
-            //设定frame宽度
-            self.frame_total = self.frames.length;
-          //播放第一帧
-          self.play_frame_idx = 1;
+            self.__init__() //初始化
             //设定播放
             setInterval(self.__play,25);
         })
     },
     methods:{
+      __init__:function(re_init){
+            console.log("运行_reader_init");
+            if(!re_init)
+              render_init();
+            this.frames = lineExports.init();
+            console.log('生成frames数据完成!');
+            //设定frame宽度
+            this.frame_total = self.frames.length;
+            //播放第一帧
+            this.play_frame_idx = 1;
+      },
+      re_init(){
+        this.__init__(true)
+        render(this.frames[0].status,speedScale(this.speed));
+      },
         hl:function(s,t){ //高亮行
             this.$eventHub.$emit('hl-lines',s,t);
         },

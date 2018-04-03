@@ -8,7 +8,7 @@ lastStatus = {};
 
 /* 数据描述--结束*/
 
-var queen_size = 4;
+var queen_size = 8;
 var queen_array = []
 
 xie1 = [] // /
@@ -76,7 +76,6 @@ var cnt = 0
 function dfs(x,y){
   if(x == queen_size ){
     cnt++;
-    stop(38,41,"找到一种方案")
     return true; //生成一个闪烁
   }
   let i;
@@ -86,19 +85,19 @@ function dfs(x,y){
       set_now(x,i);
       queen_array[x][i].val = 1;
       q_set(x,i);
-      stop(44,48,"可以放这里:"+(x+1) +" "+(i+1))
+      stop(45,50,"可以放这里:"+(x+1) +" "+(i+1))
       let res = dfs(x+1,0);
       unq_set(x,i);
 
       queen_array[x][i].now= 0;
       queen_array[x][i].val = 0;
-      //if(res)
-        //return true;
+      if(res)
+        return true;
     }
     else {
       queen_array[x][i].val = 0;
       set_now(x,i);
-      stop(44,44,"不可以放这里:"+(x+1) +" "+(i+1))
+      stop(45,45,"不可以放这里:"+(x+1) +" "+(i+1))
     }
   }
   
@@ -136,7 +135,6 @@ function run(){
   __init__();
   stop(0,0,'初始化数据');
   dfs(0,0);
-  stop(0,0,"一共找到 "+cnt+" 种方案")
 }
 
 /**
@@ -144,7 +142,7 @@ function run(){
  */
 
 function __init__(){
-  queen_array_init(4); //生成 二维数组
+  queen_array_init(8); //生成 二维数组
   currentStatus.qa= queen_array;
 }
 

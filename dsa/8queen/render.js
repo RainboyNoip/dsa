@@ -19,10 +19,22 @@ var padding = {
 var sorting = "steelblue";
 var sorted = "red";
 
+function _init_queen_back(__size){
+  let t = queen_size + __size
+  if( t <2 && t >8){
+    alert("皇后最少2个,最多8个")
+    return
+  }
+  d3.select("svg.explain>text").text(t+"皇后算法演示")
+  gsvg.select("g#queen_back").remove()
+  queen_array_init(t)
+  //render_init()
+  VM.re_init()
+}
 
 //左上角说明的数据
 var explain_data = {
-  title:'4皇后算法演示', //标题
+  title:'8皇后算法-找出一中方案-演示', //标题
   _explain:[]
 }
 
@@ -31,7 +43,7 @@ var explain_postion = {
  "padding-top":20,
  "padding-left":50,
   height:50,
-  width:210
+  width:380
 }
 //增加--说明边框
 function explain(){
@@ -80,7 +92,7 @@ function explain(){
 /* ----------数据代码------------ */
 
 var rect_h,rect_w ;//定义高度
-rect_h = rect_w = 80;
+rect_h = rect_w = 50;
 var img_src = "/dsa/4queen1/queen.jpg"
 
 var start_point = {
