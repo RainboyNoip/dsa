@@ -27,8 +27,15 @@ For detailed explanation on how things work, consult the [docs for vue-loader](h
 
  - `VM.__init__()`初始化
 
-## 使用的开源项目
+## 使用的开源项目&感谢
 
+ - [vuejs]()
+ - [d3.js]()
+ - [jquery]()
+ - [ace]()
+ - [jquery.popdown.js]()
  - [水果图标库](http://www.iconfont.cn/plus/collections/detail?cid=4014)
+ - [string-format](https://github.com/davidchambers/string-format)
+ - [lodash](https://github.com/lodash/lodash)
 
 
