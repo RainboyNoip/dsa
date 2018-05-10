@@ -12,7 +12,6 @@
     - 迷宫-DFS-找出是否有解|maze_dfs
     - 迷宫-DFS-找出有多少解|maze_dfs2
     - 迷宫-DFS-输出所有解|maze_dfs3
-    - 迷宫-DFS|maze_dfs
     - 迷宫-BFS|maze_bfs
     - 4/8皇后-游戏-DFS|4queen1
     - 4皇后-演示-找出所有方案|4queen2

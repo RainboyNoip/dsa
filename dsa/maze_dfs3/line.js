@@ -33,7 +33,9 @@ endy = 8
 mgSize = 8
 fx = [ [-1,0], [0,1], [1,0], [0,-1] ]
 
-_stack_ = []
+_queue_ = []
+var tail =0;
+var head = 0;
 
 function setVis(x,y,val){
   if(val <= 3 || val == undefined)
@@ -52,37 +54,30 @@ function isRight(x,y){
   return false
 }
 
-function dfs(x,y){
-  setVis(x,y,2)
-
-  _stack_.push({x:x,y:y})
-
-  stop(19,19,format("走到点: ({},{}),并加入堆栈",x,y))
+function bfs(x,y){
+  _queue_.push({x:x,y:y,pop:false}}
   setVis(x,y);
+  tail++;
+  while(tail != head){
+    let nx = _queue_[head].x;
+    let ny = _queue_[head].y;
 
+    _queue_[head].pop = true;
+    head++;
 
-  if(x == endx && y == endy){ //达到终点
-    stop(24,28,"找到一种解法");
-    return true
-  }
-
-  for(let i =0;i<4;i++){
-    let nx = x+fx[i][0];
-    let ny = y+fx[i][1];
-
-    if(isRight(nx,ny) && maze_data[nx-1][ny-1].val == 0){
-      let r = dfs(nx,ny)
-      unsetVis(nx,ny)
-
-      setVis(x,y,5)
-
-      _stack_.pop()
-      stop(37,37,format("回溯到点: ({},{}),并删除栈顶",x,y))
-      maze_data[x-1][y-1].val = maze_data[x-1][y-1].val % 10;
+    for(let i =0;i<4;i++){
+      let tx = nx + fx[i][0];
+      let ty = ny + fx[i][1];
+      if( isRight(tx,ty) && maze_data[x-1][y-1] == 0 ){
+          _queue_.push({x:tx,y:ty,pop:false})
+          setVis(tx,ty)
+          tail++;
+      }
     }
-  }
 
+  }
 }
+
 /* ---- 数据生成主体--结束*/
 
 /**
@@ -120,7 +115,7 @@ function run(){
  */
 function __init__(){
   currentStatus.maze_data = maze_data;
-  currentStatus.stack= _stack_;
+  currentStatus.queue= _queue_;
 }
 
 lineExports = {

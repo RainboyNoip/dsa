@@ -1,6 +1,7 @@
-var gstatus;
-var delay;
+var gstatus; var delay;
 var gbase;
+var back;
+var shade;
 var gsvg;
 var scaleColor;
 
@@ -10,6 +11,15 @@ var padding = {
   top:200
 }
 
+//迷宫开始的位置
+start_point = {
+  x:50,
+  y:50
+}
+
+//方格的高宽
+rect_h = rect_w = 50;
+
 //设定的数据
 var sorting = "steelblue";
 var sorted = "red";
@@ -17,46 +27,15 @@ var sorted = "red";
 
 //左上角说明的数据
 var explain_data = {
-  title:'判断迷宫能不能走通', //标题
-  _explain:[ // 说明数据
-    {
-      title:'无序元素',
-      icon:[
-        {
-          name:"rect",
-          icon:function(selection){
-            selection.attr("fill",sorting)
-            .attr("width",30)
-            .attr("height",10)
-            .attr("stroke","black")
-            .attr("stroke-width","1px")
-          }
-        }
-      ]
-    },
-    {
-      title:'有序元素',
-      icon:[
-        {
-          name:"rect",
-          icon:function(selection){
-            selection.attr("fill",sorted)
-            .attr("width",30)
-            .attr("height",10)
-            .attr("stroke","black")
-            .attr("stroke-width","1px")
-          }
-        }
-      ]
-    }
-  ]
+  title:'迷宫BFS', //标题
+  _explain:[]
 }
 
 //说明框的大小
 var explain_postion = {
  "padding-top":20,
  "padding-left":50,
-  height:100,
+  height:60,
   width:310
 }
 //增加--说明边框
@@ -105,6 +84,120 @@ function explain(){
 
 /* ----------数据代码------------ */
 
+function render_maze_data(_status,_delay){
+
+    let d = back.selectAll("g#heng").data(_status.maze_data)
+    let dEnter = d.enter().append("g")
+    .attr("id","heng")
+    .attr('transform',d3Transform().translate(function (d,i) {
+      return [start_point.x,start_point.y+i*rect_h];
+    }));
+
+
+
+    let gezi = d.selectAll("rect#gezi").data(function(d){return d;});
+    let geziEnter = dEnter.selectAll("rect#gezi").data(function(d){return d;}).enter()
+
+
+    gezi.attr("fill",function(d){
+      let color = ["#fff","#000",sorting,"#f00"]
+      let i = d.val % 10;
+      return color[i];
+    })
+
+    geziEnter.append("rect")
+    .attr("id","gezi")
+    .attr("x",function(d){
+      return (d.y-1)*rect_w
+    })
+    .attr("fill",function(d){
+      let color = ["#fff","#000",sorting,"#f00"]
+      let i = d.val % 10;
+      return color[i];
+    })
+    .attr("stroke",function(d){
+      return "#00f"
+    })
+    .attr("stroke-width",function(d){
+      return "1px"
+    })
+    .attr("height",rect_h)
+    .attr("width",rect_w)
+
+}
+
+function render_maze_shade(_status,_delay){
+
+    let d = shade.selectAll("g#heng").data(_status.maze_data)
+    let dEnter = d.enter().append("g")
+    .attr("id","heng")
+    .attr('transform',d3Transform().translate(function (d,i) {
+      return [start_point.x,start_point.y+i*rect_h];
+    }));
+
+
+
+    let gezi = d.selectAll("rect#gezi").data(function(d){return d;});
+    let geziEnter = dEnter.selectAll("rect#gezi").data(function(d){return d;}).enter()
+
+
+    gezi.attr("fill",function(d){
+      if(parseInt(d.val /10) == 4){
+        return "rgba(255,255,0,0.8)"
+      }
+
+      if(parseInt(d.val /10) == 5)
+        return "rgba(0,0,205,0.8)"
+      return "rgba(255,255,0,0)"
+    })
+
+    geziEnter.append("rect")
+    .attr("id","gezi")
+    .attr("x",function(d){
+      return (d.y-1)*rect_w
+    })
+    .attr("fill","rgba(255,255,0,0)")
+    .attr("stroke","rgba(255,255,0,0)")
+    .attr("stroke-width","1px")
+    .attr("height",rect_h)
+    .attr("width",rect_w)
+
+}
+
+function queue_push(sel){
+  sel.append("rect")
+    .attr("stroke","#000")
+    .attr("stroke-with","1px")
+    .attr("fill","#fff")
+    .attr("height",rect_h/2)
+    .attr("width",rect_w)
+
+  sel.append("text")
+  .attr("font-size","16px")
+  .attr('fill',"#000")
+  .attr("text-anchor","start")
+  .attr("y",rect_h/3)
+  .attr("x",rect_w/8)
+  .text(function(d){
+    return format( "({},{})",d.x,d.y);
+  })
+
+}
+
+function render_queue(_status,_delay){
+  let sU = stack_back.selectAll("g#b").data(_status.queue)
+  let sE = sU.enter()
+  let sR = sU.exit()
+
+  sE.append("g").attr("id","b")
+  .attr('transform',d3Transform().translate(function (d,i) {
+    return [i*(rect_h/2),0]
+  })).call(queue_push)
+
+  sR.remove()
+
+}
+
 /* ------------------------ */
 
 //初始化
@@ -120,14 +213,25 @@ function render_init(){
 
   //颜色比例尺
   scaleColor = d3.scale.category10();
-  this.svg = d3.select("svg").call(zoom);
+  this.svg = d3.select("svg")
   gsvg = this.svg;
-  explain();
+  back = gsvg.append("g").attr("id","maze_data_back")
+    .attr('transform',d3Transform().translate(function () {
+        return [start_point.x,start_point.y];
+    }));
+
+  shade= gsvg.append("g").attr("id","shade")
+    .attr('transform',d3Transform().translate(function () {
+        return [start_point.x,start_point.y];
+    }));
+  //explain();
 }
 
 
 //绘制每一帧的函数
 function render(_status,_delay){
+  render_maze_data(_status,_delay)
+  render_maze_shade(_status,_delay)
   //function 1
   //function 2
   //function 3
