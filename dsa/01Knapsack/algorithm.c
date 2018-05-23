@@ -19,6 +19,9 @@ void Knapsack01(){
                 else
                     f[i][j] = f[i-1][j-w[i]]+v[i];
             }
+            else { //放不下
+                    f[i][j] = f[i-1][j];
+            }
         }
 }
 int main(){

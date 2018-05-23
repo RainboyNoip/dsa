@@ -45,7 +45,7 @@ function knapsack(){
   let i,j;
   for(i=1;i<=5;i++)
     for(j=1;j<=10;j++){
-      if(j -w[i] >=0 ){
+      if(j -w[i] >=0 ){ //可以取
         //比较
         clear_two()
         two[xb(i-1,j)] = 1
@@ -63,6 +63,16 @@ function knapsack(){
           currentStatus.value = value
           stop(20,20,"取f[i-1][j-w[i]]+v[i]")
         }
+      }
+      else { //放不下
+          clear_two()
+          two[xb(i-1,j)] = 1
+          two[xb(i,j)] = 2;
+          currentStatus.two = two
+          value[xb(i,j)] = value[xb(i-1,j)];
+          currentStatus.value = value
+          stop(23,23,format("放不下第{}个物品",i))
+
       }
     }
 }
