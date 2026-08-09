@@ -36,7 +36,7 @@ node tests/smoke.mjs
 DSA_BASE_URL=http://127.0.0.1:8080 CHROMIUM_BIN=/usr/bin/chromium node tests/smoke.mjs
 ```
 
-脚本会检查全部 26 个公开演示的资源请求、首末帧渲染、源码高亮、讲解日志、播放状态、跳帧、重置、速度和对话框。
+脚本会检查全部 27 个公开演示的资源请求、首末帧渲染、源码高亮、讲解日志、播放状态、跳帧、重置、速度和对话框。
 
 ## 维护演示
 

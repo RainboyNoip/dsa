@@ -10,6 +10,7 @@ const demonstrations = [
   "01Knapsack",
   "01Knapsack1",
   "group_knapsack",
+  "complete_knapsack",
   "4queen1",
   "4queen2",
   "8queen",
@@ -204,6 +205,7 @@ async function testDemonstration(debugPort, id) {
 
     if ([
       "group_knapsack",
+      "complete_knapsack",
       "segment_tree_build",
       "segment_tree_range_update",
       "segment_tree_single_update"
@@ -262,6 +264,30 @@ async function testDemonstration(debugPort, id) {
       assert(renderedKnapsack.groups === "已完成,已完成,已完成", `${id}: 分组状态错误`);
       assert(renderedKnapsack.oneArray, `${id}: 动画不应维护上一组数组`);
       assert(renderedKnapsack.descending, `${id}: 容量没有倒序枚举`);
+    }
+
+    if (id === "complete_knapsack") {
+      const renderedKnapsack = await page.evaluate(`(() => ({
+        dp: [...document.querySelectorAll('.dp-array .array-value')]
+          .map((item) => item.textContent.trim()).join(','),
+        result: document.querySelector('.operation-result').textContent.trim(),
+        items: [...document.querySelectorAll('.item-state')]
+          .map((item) => item.textContent.trim()).join(','),
+        oneArray: document.querySelectorAll('.dp-array').length === 1 &&
+          document.querySelector('.baseline-array') === null,
+        ascending: window.demoPlayer.editor.getValue()
+          .includes('current_capacity <= capacity;') &&
+          window.demoPlayer.editor.getValue().includes('++current_capacity'),
+        reusesCurrentItem: window.demoPlayer.frames.some(
+          (frame) => frame.status.sourceUsesCurrentItem === true
+        )
+      }))()`);
+      assert(renderedKnapsack.dp === "0,0,3,5,6,8,10,11,13", `${id}: 最终 DP 数组错误`);
+      assert(renderedKnapsack.result === "结果：13", `${id}: 最优值没有显示`);
+      assert(renderedKnapsack.items === "已完成,已完成,已完成", `${id}: 物品状态错误`);
+      assert(renderedKnapsack.oneArray, `${id}: 动画只应展示源码使用的一维 DP 数组`);
+      assert(renderedKnapsack.ascending, `${id}: 容量没有正序枚举`);
+      assert(renderedKnapsack.reusesCurrentItem, `${id}: 没有展示复用本轮状态的关键帧`);
     }
 
     if (id === "segment_tree_range_update") {
