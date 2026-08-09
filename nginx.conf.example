@@ -1,0 +1,43 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name dsa.example.com;
+
+    # Replace this path with the absolute path to this repository's public directory.
+    root /var/www/dsa/public;
+    index index.html;
+
+    charset utf-8;
+    etag on;
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    # Physical files and directory indexes only. There is intentionally no SPA fallback.
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~* \.(?:html?|js|css)$ {
+        try_files $uri =404;
+        expires off;
+        add_header Cache-Control "no-cache" always;
+    }
+
+    location ~* \.(?:woff2?|png|jpe?g|gif|svg|mp3)$ {
+        try_files $uri =404;
+        expires 7d;
+    }
+
+    location ~* \.c$ {
+        types {}
+        default_type text/plain;
+        try_files $uri =404;
+        expires off;
+        add_header Cache-Control "no-cache" always;
+    }
+
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_types text/plain text/css application/javascript application/json image/svg+xml;
+}

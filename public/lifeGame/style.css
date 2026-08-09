@@ -1,0 +1,47 @@
+.tools {
+  position: absolute;
+  z-index: 20;
+  right: 16px;
+  top: 16px;
+  padding: 8px;
+  border: 1px solid #cfd7d2;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.tools ul {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tools span,
+.tools button {
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+.tools span {
+  display: inline-block;
+  min-width: 86px;
+  color: #66716b;
+  text-align: center;
+}
+
+.tools button {
+  min-height: 30px;
+  padding: 4px 9px;
+  border: 1px solid #aeb8b2;
+  border-radius: 4px;
+  color: #1f2924;
+  background: #fff;
+  cursor: pointer;
+}
+
+.tools button:hover {
+  border-color: #236b4d;
+  background: #dcebe3;
+}

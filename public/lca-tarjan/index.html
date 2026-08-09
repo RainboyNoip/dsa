@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN" data-demo-state="loading">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="LCA 离线算法（Tarjan）逐帧算法动画与 C 语言源码讲解">
+    <title>LCA 离线算法（Tarjan） | 数据结构与算法动画</title>
+    <link rel="icon" href="/favicon.png">
+    <link rel="stylesheet" href="/assets/css/player-icons.css">
+    <link rel="stylesheet" href="/assets/css/demo.css">
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+    <div class="demo-shell wrapper">
+      <header class="demo-toolbar">
+        <div class="toolbar-buttons">
+          <button class="icon-button" id="speed-up" type="button" title="加速" aria-label="加速">
+            <i class="player-icon icon-kuai" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button" id="speed-down" type="button" title="减速" aria-label="减速">
+            <i class="player-icon icon-icon" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="demo-identity">
+          <span class="demo-identity__product">DSA Animation</span>
+          <h1>LCA 离线算法（Tarjan）</h1>
+        </div>
+        <div class="range-control">
+          <label for="speed-range">速度</label>
+          <input id="speed-range" type="range" min="1" max="100" value="50">
+          <output id="speed-output" for="speed-range">50%</output>
+        </div>
+        <div class="runtime-status" id="runtime-status" role="status" aria-live="polite">正在加载</div>
+        <div class="toolbar-buttons toolbar-buttons--right">
+          <button class="icon-button" type="button" title="关于" aria-label="关于" data-dialog="about-dialog">
+            <i class="player-icon icon-guanyu1" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button" type="button" title="帮助" aria-label="帮助" data-dialog="help-dialog">
+            <i class="player-icon icon-bangzhu" aria-hidden="true"></i>
+          </button>
+        </div>
+      </header>
+
+      <main class="demo-workspace wrapper-row">
+        <section class="visual-pane wrapper-code" aria-label="算法动画">
+          <div class="scene">
+            <svg role="img" aria-label="LCA 离线算法（Tarjan）动画画布"></svg>
+            <div class="scene-status" id="scene-status" role="status">正在准备演示</div>
+          </div>
+          <div class="narration-panel" id="logger" aria-label="逐帧讲解" aria-live="polite">
+            <ol id="narration-list"></ol>
+          </div>
+        </section>
+        <section class="source-pane wrapper-code main" aria-label="算法源码">
+          <div class="source-editor" id="source-editor"></div>
+        </section>
+      </main>
+
+      <footer class="playback-toolbar">
+        <div class="toolbar-buttons">
+          <button class="icon-button" id="play-toggle" type="button" title="播放" aria-label="播放">
+            <i class="player-icon icon-bofang" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button" id="reset" type="button" title="重置" aria-label="重置">
+            <i class="player-icon icon-zhongzhi" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="range-control frame-control">
+          <span class="frame-control__label">帧</span>
+          <input id="frame-range" type="range" min="1" max="1" value="1" disabled>
+          <output id="frame-output" for="frame-range">1 / 1</output>
+        </div>
+        <div class="toolbar-buttons toolbar-buttons--right">
+          <button class="icon-button" id="previous-frame" type="button" title="上一帧" aria-label="上一帧" disabled>
+            <i class="player-icon icon-shangyishou" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button" id="next-frame" type="button" title="下一帧" aria-label="下一帧" disabled>
+            <i class="player-icon icon-xiayizhen" aria-hidden="true"></i>
+          </button>
+        </div>
+      </footer>
+    </div>
+
+    <dialog id="about-dialog" aria-labelledby="about-title">
+      <div class="dialog-header">
+        <h2 id="about-title">关于</h2>
+        <button class="icon-button dialog-close" type="button" title="关闭" aria-label="关闭" data-dialog-close>×</button>
+      </div>
+      <div class="dialog-body">
+        <p><strong>数据结构与算法动画</strong>（DSA Animation）通过源码、动画和逐帧讲解帮助学习算法。</p>
+      </div>
+    </dialog>
+
+    <dialog id="help-dialog" aria-labelledby="help-title">
+      <div class="dialog-header">
+        <h2 id="help-title">帮助</h2>
+        <button class="icon-button dialog-close" type="button" title="关闭" aria-label="关闭" data-dialog-close>×</button>
+      </div>
+      <div class="dialog-body">
+        <ul>
+          <li>顶部滑块调整动画速度，越向右越快。</li>
+          <li>底部滑块跳转到指定帧；跳转会暂停播放。</li>
+          <li>重置会回到第一帧，并恢复对应的讲解记录。</li>
+        </ul>
+      </div>
+    </dialog>
+
+    <script src="/assets/vendor/d3.min.js"></script>
+    <script src="/assets/vendor/d3-transform.min.js"></script>
+    <script src="/assets/vendor/clone.min.js"></script>
+    <script src="/assets/vendor/ace/ace.js"></script>
+    <script src="/assets/vendor/ace/mode-c_cpp.js"></script>
+    <script src="/assets/vendor/ace/theme-solarized_dark.js"></script>
+    <script src="/assets/vendor/ace/ext-searchbox.js"></script>
+    <script src="/assets/js/compat.js"></script>
+    <script src="./render.js"></script>
+    <script src="./line.js"></script>
+    <script type="module" src="/assets/js/player.js"></script>
+  </body>
+</html>

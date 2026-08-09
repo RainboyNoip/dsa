@@ -1,0 +1,26 @@
+@font-face {
+  font-family: "DSA Player Icons";
+  src: url("../fonts/player-icons.woff") format("woff");
+  font-display: block;
+}
+
+.player-icon {
+  display: inline-block;
+  font-family: "DSA Player Icons";
+  font-size: 21px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  speak: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.icon-kuai::before { content: "\e600"; }
+.icon-zhongzhi::before { content: "\e601"; }
+.icon-bangzhu::before { content: "\e630"; }
+.icon-zanting::before { content: "\e772"; }
+.icon-bofang::before { content: "\e646"; }
+.icon-icon::before { content: "\e667"; }
+.icon-shangyishou::before { content: "\e647"; }
+.icon-guanyu1::before { content: "\e629"; }
+.icon-xiayizhen::before { content: "\e773"; }
