@@ -206,6 +206,7 @@ async function testDemonstration(debugPort, id) {
     if ([
       "group_knapsack",
       "complete_knapsack",
+      "maze_bfs",
       "segment_tree_build",
       "segment_tree_range_update",
       "segment_tree_single_update"
@@ -288,6 +289,48 @@ async function testDemonstration(debugPort, id) {
       assert(renderedKnapsack.oneArray, `${id}: 动画只应展示源码使用的一维 DP 数组`);
       assert(renderedKnapsack.ascending, `${id}: 容量没有正序枚举`);
       assert(renderedKnapsack.reusesCurrentItem, `${id}: 没有展示复用本轮状态的关键帧`);
+    }
+
+    if (id === "maze_bfs") {
+      const renderedBfs = await page.evaluate(`(() => {
+        const player = window.demoPlayer;
+        const finalStatus = player.frames[player.frames.length - 1].status;
+        const source = player.editor.getValue();
+        const queueValues = [...document.querySelectorAll('.queue-value')]
+          .map((item) => item.textContent.trim()).filter(Boolean);
+        return {
+          targetDistance: document.querySelector(
+            '.maze-cell[data-row="7"][data-column="8"] .cell-distance'
+          ).textContent.trim(),
+          result: document.querySelector('.bfs-result').textContent.trim(),
+          head: document.querySelector('.head-value').textContent.trim(),
+          tail: document.querySelector('.tail-value').textContent.trim(),
+          headPointer: document.querySelector(
+            '.queue-cell[data-index="27"] .head-pointer'
+          ).textContent.trim(),
+          tailPointer: document.querySelector(
+            '.queue-cell[data-index="27"] .tail-pointer'
+          ).textContent.trim(),
+          queueLength: finalStatus.queue.length,
+          queuePrefix: queueValues.slice(0, 5).join(','),
+          hasBreadth: player.frames.some(
+            (frame) => frame.status.tail - frame.status.head >= 2
+          ),
+          sourceIsBfs: source.includes('void bfs(int x,int y)') &&
+            source.includes('node a[10000]') &&
+            source.includes('dis[nx][ny] = dis[h.x][h.y] + 1') &&
+            !source.includes('dfs(')
+        };
+      })()`);
+      assert(renderedBfs.targetDistance === "13", `${id}: 终点距离错误`);
+      assert(renderedBfs.result === "YES · dis[7][8] = 13", `${id}: 最终结果错误`);
+      assert(renderedBfs.head === "head = 27", `${id}: head 指针终态错误`);
+      assert(renderedBfs.tail === "tail = 27", `${id}: tail 指针终态错误`);
+      assert(renderedBfs.headPointer === "H" && renderedBfs.tailPointer === "T", `${id}: 队空时 H/T 指针没有重合`);
+      assert(renderedBfs.queueLength === 27, `${id}: 入队节点数量错误`);
+      assert(renderedBfs.queuePrefix === "(2,1),(2,2),(2,3),(2,4),(3,3)", `${id}: 队列不是 BFS 顺序`);
+      assert(renderedBfs.hasBreadth, `${id}: 动画中没有形成包含多个节点的队列`);
+      assert(renderedBfs.sourceIsBfs, `${id}: 源码不是指定的 BFS 实现`);
     }
 
     if (id === "segment_tree_range_update") {

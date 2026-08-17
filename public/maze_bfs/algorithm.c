@@ -1,86 +1,68 @@
-#include <cstdio>
+#include <bits/stdc++.h>
+using namespace std;
 
-int n;//迷宫的大小
-int sx,sy,zx,zy;
-int map[100][100] = {0}; //存迷宫
-int fx[4][2] = {  {-1,0},{0,1},{1,0},{0,-1}};
-bool vis[100][100] ={0}; //方向
+int n;
+int sx,sy,tx,ty;
+int maze[100][100];
+int dis[100][100]; // dis = distance
 
-//x,y是不是在迷宫内
-bool in_mg(int x,int y){
-    if(x <= n && x>=1 && y <=n && y >=1)
-        return true;
-    return false;
+void init(){
+    cin >> n;
+    cin >> sx >> sy >> tx >> ty;
+    for(int i = 1;i<=n;i++){
+        for(int j = 1;j<=n;j++)
+            cin >> maze[i][j];
+    }
 }
 
-struct _pos {
+// 队列的实现 -- start
+struct node {
     int x,y;
 };
-
-//队列操作
-int tail=0,head = 0;
-_pos queue[100*100] = {0};
-
-void push(int x,int y){ //加入队尾
-    queue[tail].x = x;
-    queue[tail].y = y;
-    tail++;
-}
-
-void front(int &x,int &y){ //反回队首的值
-    x = queue[head].x;
-    y = queue[head].y;
-}
-
-void pop(){ //弹出
-    head++;
-}
-
-bool empty(){ //队列是否为空
+node a[10000];
+int head,tail;
+// tail 指向最后一个元素的后一个位置
+void push(node t) {a[tail++] = t;}
+void pop(){ head++;}
+node front(){ return a[head];}
+node back(){ return a[tail-1];}
+bool empty(){
     return head == tail;
 }
+// 队列的实现 -- end
 
-// 判断
-bool bfs(int x,int y){
-    vis[x][y] = 1;
-    push(x,y);
+int dx[] = {0,0,1,-1};
+int dy[] = {1,-1,0,0};
 
-    while( !empty()){ //非空
-        int nx,ny,tx,ty;
-        front(nx,ny);  pop();
-        if( nx == zx && ny == zy) //到达终点
-            return true;
-        int i;
-        for(i=0;i<4;i++){
-            tx = nx +fx[i][0];
-            ty = ny +fx[i][1];
+void bfs(int x,int y){
+    push({x,y});
+    dis[x][y] = 1;
 
-            // 在迷宫内 && 没有访问过
-            if( in_mg(tx,ty) && vis[tx][ty] == false){
-                vis[tx][ty] = 1;
-                push(tx,ty);
-            }
+    while( !empty() ) {
+        node h = front();
+        pop();
+
+        for(int i = 0 ;i<4;i++){
+            int nx = h.x + dx[i];
+            int ny = h.y + dy[i];
+            if( nx < 1 || nx > n || ny < 1 || ny > n) continue;
+            if( maze[nx][ny]==1 ) continue;
+            if( dis[nx][ny] !=0 ) continue;
+
+            dis[nx][ny] = dis[h.x][h.y] + 1;
+            push({nx,ny});
         }
-
     }
-    
-
-    return false;
 }
 
 int main(){
-    int i,j;
-    scanf("%d",&n);
-    scanf("%d%d%d%d",&sx,&sy,&zx,&zy);
-    for (i=1;i<=n;i++){
-        for (j=1;j<=n;j++){
-            scanf("%d",&map[i][j]);
-        }
-    }
-    if( bfs(sx,sy))
-        printf("YES");
+    init();
+    bfs(sx,sy);
+    if( dis[tx][ty] !=0 )
+        cout << "YES" << endl;
     else
-        printf("NO");
+        cout << "NO" << endl;
+    cout << dis[tx][ty];
+
     return 0;
 }
-
