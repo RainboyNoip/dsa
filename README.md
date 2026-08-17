@@ -20,6 +20,20 @@ python3 -m http.server 4173 --directory public
 2. 参考 `nginx.conf.example` 修改 `server_name` 和绝对 `root` 路径。
 3. 使用 `nginx -t` 检查配置后重载 Nginx。
 
+本仓库已配置 `bohai` VPS 的同步脚本。首次部署或需要检查变更时先执行预演：
+
+```bash
+./scripts/sync-to-bohai.sh --dry-run
+```
+
+确认输出后执行正式同步：
+
+```bash
+./scripts/sync-to-bohai.sh
+```
+
+脚本只同步 `public/` 到 `bohai:/www/wwwroot/anima1.roj.ac.cn/`。远端多余文件会在传输结束后删除，服务器维护的 `.well-known/` 目录和 `.user.ini` 文件除外。
+
 站点只支持部署在域名根目录。规范算法 URL 带末尾斜杠；旧的 `/#/quickSort` 哈希地址不再兼容。
 
 ## 浏览器验收
