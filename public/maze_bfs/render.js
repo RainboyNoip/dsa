@@ -23,9 +23,13 @@
   var tailValue;
   var queueRange;
   var operationTitle;
-  var currentText;
   var candidateText;
   var resultText;
+  var frontArrow;
+  var currentNodeBox;
+  var currentNodeValue;
+  var currentNodeDistance;
+  var currentNodeStage;
 
   function addText(parent, className, x, y, text, options) {
     options = options || {};
@@ -196,6 +200,31 @@
       .attr("font-weight", 700)
       .attr("text-anchor", "middle")
       .text("");
+    queueCells.append("line")
+      .attr("class", "queue-exited-line")
+      .attr("x1", 7)
+      .attr("y1", 42)
+      .attr("x2", 41)
+      .attr("y2", 18)
+      .attr("stroke", colors.muted)
+      .attr("stroke-width", 1.5)
+      .attr("opacity", 0);
+    queueCells.append("circle")
+      .attr("class", "queue-exited-badge")
+      .attr("cx", 40)
+      .attr("cy", 40)
+      .attr("r", 7)
+      .attr("fill", colors.muted)
+      .attr("opacity", 0);
+    queueCells.append("text")
+      .attr("class", "queue-exited-label")
+      .attr("x", 40)
+      .attr("y", 43)
+      .attr("fill", colors.white)
+      .attr("font-size", 8)
+      .attr("font-weight", 800)
+      .attr("text-anchor", "middle")
+      .text("");
     queueCells.append("text")
       .attr("class", "head-pointer")
       .attr("x", 15)
@@ -214,23 +243,81 @@
       .attr("font-weight", 800)
       .attr("text-anchor", "middle")
       .text("");
+
+    var definitions = svg.append("defs");
+    definitions.append("marker")
+      .attr("id", "front-copy-arrowhead")
+      .attr("viewBox", "0 0 10 10")
+      .attr("refX", 9)
+      .attr("refY", 5)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 6)
+      .attr("orient", "auto-start-reverse")
+      .append("path")
+      .attr("d", "M 0 0 L 10 5 L 0 10 z")
+      .attr("fill", colors.blue);
+    frontArrow = svg.append("path")
+      .attr("class", "front-copy-arrow")
+      .attr("fill", "none")
+      .attr("stroke", colors.blue)
+      .attr("stroke-width", 2.5)
+      .attr("stroke-dasharray", "7 5")
+      .attr("marker-end", "url(#front-copy-arrowhead)")
+      .attr("opacity", 0);
   }
 
   function createOperationPanel() {
     var panel = svg.append("g").attr("class", "operation-panel");
     panel.append("rect")
       .attr("x", 488)
-      .attr("y", 455)
+      .attr("y", 450)
       .attr("width", 370)
-      .attr("height", 121)
+      .attr("height", 138)
       .attr("rx", 6)
       .attr("fill", "#f2f4f2");
-    operationTitle = addText(panel, "operation-title", 506, 482, "等待开始", { size: 14, weight: 700 });
-    currentText = addText(panel, "current-node", 506, 507, "当前队首 h：--", { size: 12, fill: colors.muted });
-    candidateText = addText(panel, "candidate-node", 506, 530, "考察邻格：--", { size: 12, fill: colors.muted });
-    queueRange = addText(panel, "queue-range", 506, 553, "有效区间：[0,0)", { size: 12, fill: colors.muted });
-    resultText = addText(panel, "bfs-result", 840, 553, "", {
-      size: 13,
+
+    currentNodeBox = panel.append("rect")
+      .attr("class", "current-node-box")
+      .attr("x", 500)
+      .attr("y", 462)
+      .attr("width", 116)
+      .attr("height", 112)
+      .attr("rx", 6)
+      .attr("fill", colors.white)
+      .attr("stroke", colors.line)
+      .attr("stroke-width", 2);
+    addText(panel, "current-node-title", 558, 480, "当前节点 h", {
+      size: 12,
+      weight: 800,
+      anchor: "middle"
+    });
+    addText(panel, "current-node-copy-label", 558, 495, "（队首副本）", {
+      size: 9,
+      fill: colors.muted,
+      anchor: "middle"
+    });
+    currentNodeValue = addText(panel, "current-node-value", 558, 524, "--", {
+      size: 20,
+      weight: 800,
+      anchor: "middle"
+    });
+    currentNodeDistance = addText(panel, "current-node-distance", 558, 545, "dis = --", {
+      size: 11,
+      fill: colors.muted,
+      anchor: "middle"
+    });
+    currentNodeStage = addText(panel, "current-node-stage", 558, 565, "等待 front()", {
+      size: 9,
+      weight: 700,
+      fill: colors.muted,
+      anchor: "middle"
+    });
+
+    operationTitle = addText(panel, "operation-title", 630, 477, "等待开始", { size: 13, weight: 700 });
+    candidateText = addText(panel, "candidate-node", 630, 505, "考察邻格：--", { size: 11, fill: colors.muted });
+    queueRange = addText(panel, "queue-range", 630, 529, "有效区间：[0,0)", { size: 11, fill: colors.muted });
+    resultText = addText(panel, "bfs-result", 846, 558, "", {
+      size: 12,
       weight: 800,
       fill: colors.green,
       anchor: "end"
@@ -251,6 +338,38 @@
       (stateNames[currentStatus.candidateState] || "检查中");
   }
 
+  function currentNodeStageText(currentStatus) {
+    if (currentStatus.phase === "front") return "已读取，等待 pop()";
+    if (currentStatus.phase === "node-done") return "扩展完成";
+    if (currentStatus.current) return "已出队，正在扩展";
+    if (currentStatus.phase === "empty" || currentStatus.phase === "done") return "队列为空";
+    return "等待 front()";
+  }
+
+  function currentNodeColors(currentStatus) {
+    if (currentStatus.phase === "front") {
+      return { fill: colors.blueSoft, stroke: colors.blue, text: colors.blue };
+    }
+    if (currentStatus.phase === "node-done") {
+      return { fill: colors.greenSoft, stroke: colors.green, text: colors.green };
+    }
+    if (currentStatus.current) {
+      return { fill: colors.amberSoft, stroke: colors.amber, text: colors.amber };
+    }
+    return { fill: colors.white, stroke: colors.line, text: colors.muted };
+  }
+
+  function frontArrowPath(index) {
+    var sourceX = 488 + (index % 7) * 53 + 24;
+    var sourceY = 112 + Math.floor(index / 7) * 83 + 48;
+    var targetX = 558;
+    var targetY = 460;
+    var controlY = Math.max(sourceY + 24, 438);
+    return "M " + sourceX + " " + sourceY +
+      " C " + sourceX + " " + controlY + ", " + targetX + " " + controlY +
+      ", " + targetX + " " + targetY;
+  }
+
   function render_init() {
     svg = d3.select(".scene > svg:not(.explain)");
     svg.selectAll("*").remove();
@@ -265,8 +384,8 @@
     });
     createLegend();
     createMaze();
-    createQueue();
     createOperationPanel();
+    createQueue();
   }
 
   function render(currentStatus, requestedDelay) {
@@ -329,6 +448,15 @@
         var point = currentStatus.queue[index];
         return point ? "(" + point.x + "," + point.y + ")" : "";
       });
+    queueCells.select(".queue-exited-line").attr("opacity", function (index) {
+      return index < currentStatus.head && index < currentStatus.tail ? 0.7 : 0;
+    });
+    queueCells.select(".queue-exited-badge").attr("opacity", function (index) {
+      return index < currentStatus.head && index < currentStatus.tail ? 1 : 0;
+    });
+    queueCells.select(".queue-exited-label").text(function (index) {
+      return index < currentStatus.head && index < currentStatus.tail ? "出" : "";
+    });
     queueCells.select(".head-pointer").text(function (index) {
       return index === currentStatus.head ? "H" : "";
     });
@@ -339,11 +467,32 @@
     headValue.text("head = " + currentStatus.head);
     tailValue.text("tail = " + currentStatus.tail);
     operationTitle.text(currentStatus.operation);
-    currentText
+
+    var nodeColors = currentNodeColors(currentStatus);
+    currentNodeBox.interrupt().transition().duration(duration)
+      .attr("fill", nodeColors.fill)
+      .attr("stroke", nodeColors.stroke)
+      .attr("stroke-width", currentStatus.current ? 3 : 2);
+    currentNodeValue
       .attr("fill", currentStatus.current ? colors.ink : colors.muted)
       .text(currentStatus.current
-        ? "当前队首 h：(" + currentStatus.current.x + "," + currentStatus.current.y + ")"
-        : "当前队首 h：--");
+        ? "(" + currentStatus.current.x + "," + currentStatus.current.y + ")"
+        : "--");
+    currentNodeDistance.text(currentStatus.current
+      ? "dis = " + currentStatus.dis[currentStatus.current.x - 1][currentStatus.current.y - 1]
+      : "dis = --");
+    currentNodeStage
+      .attr("fill", nodeColors.text)
+      .text(currentNodeStageText(currentStatus));
+
+    if (currentStatus.phase === "front" && currentStatus.currentIndex !== null) {
+      frontArrow
+        .attr("d", frontArrowPath(currentStatus.currentIndex))
+        .attr("opacity", 1);
+    } else {
+      frontArrow.attr("opacity", 0);
+    }
+
     candidateText
       .attr("fill", currentStatus.candidateState === "discovered" ? colors.blue : colors.muted)
       .text(candidateDescription(currentStatus));

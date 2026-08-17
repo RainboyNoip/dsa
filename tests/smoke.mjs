@@ -298,7 +298,7 @@ async function testDemonstration(debugPort, id) {
         const source = player.editor.getValue();
         const queueValues = [...document.querySelectorAll('.queue-value')]
           .map((item) => item.textContent.trim()).filter(Boolean);
-        return {
+        const finalState = {
           targetDistance: document.querySelector(
             '.maze-cell[data-row="7"][data-column="8"] .cell-distance'
           ).textContent.trim(),
@@ -321,16 +321,75 @@ async function testDemonstration(debugPort, id) {
             source.includes('dis[nx][ny] = dis[h.x][h.y] + 1') &&
             !source.includes('dfs(')
         };
+
+        const frontIndex = player.frames.findIndex(
+          (frame) => frame.status.phase === 'front' && frame.status.currentIndex === 0
+        );
+        player.renderFrame(frontIndex, 0);
+        const frontState = {
+          value: document.querySelector('.current-node-value').textContent.trim(),
+          distance: document.querySelector('.current-node-distance').textContent.trim(),
+          stage: document.querySelector('.current-node-stage').textContent.trim(),
+          arrowVisible: document.querySelector('.front-copy-arrow').getAttribute('opacity') === '1',
+          head: document.querySelector('.head-value').textContent.trim()
+        };
+
+        const popIndex = player.frames.findIndex(
+          (frame) => frame.status.phase === 'pop' && frame.status.currentIndex === 0
+        );
+        player.renderFrame(popIndex, 0);
+        const popState = {
+          value: document.querySelector('.current-node-value').textContent.trim(),
+          stage: document.querySelector('.current-node-stage').textContent.trim(),
+          arrowHidden: document.querySelector('.front-copy-arrow').getAttribute('opacity') === '0',
+          exited: document.querySelector(
+            '.queue-cell[data-index="0"] .queue-exited-label'
+          ).textContent.trim(),
+          head: document.querySelector('.head-value').textContent.trim()
+        };
+
+        const nodeDoneIndex = player.frames.findIndex(
+          (frame) => frame.status.phase === 'node-done' && frame.status.currentIndex === 0
+        );
+        player.renderFrame(nodeDoneIndex, 0);
+        const nodeDoneState = {
+          value: document.querySelector('.current-node-value').textContent.trim(),
+          stage: document.querySelector('.current-node-stage').textContent.trim()
+        };
+        player.renderFrame(player.frames.length - 1, 0);
+
+        return { finalState, frontState, popState, nodeDoneState };
       })()`);
-      assert(renderedBfs.targetDistance === "13", `${id}: 终点距离错误`);
-      assert(renderedBfs.result === "YES · dis[7][8] = 13", `${id}: 最终结果错误`);
-      assert(renderedBfs.head === "head = 27", `${id}: head 指针终态错误`);
-      assert(renderedBfs.tail === "tail = 27", `${id}: tail 指针终态错误`);
-      assert(renderedBfs.headPointer === "H" && renderedBfs.tailPointer === "T", `${id}: 队空时 H/T 指针没有重合`);
-      assert(renderedBfs.queueLength === 27, `${id}: 入队节点数量错误`);
-      assert(renderedBfs.queuePrefix === "(2,1),(2,2),(2,3),(2,4),(3,3)", `${id}: 队列不是 BFS 顺序`);
-      assert(renderedBfs.hasBreadth, `${id}: 动画中没有形成包含多个节点的队列`);
-      assert(renderedBfs.sourceIsBfs, `${id}: 源码不是指定的 BFS 实现`);
+      assert(renderedBfs.finalState.targetDistance === "13", `${id}: 终点距离错误`);
+      assert(renderedBfs.finalState.result === "YES · dis[7][8] = 13", `${id}: 最终结果错误`);
+      assert(renderedBfs.finalState.head === "head = 27", `${id}: head 指针终态错误`);
+      assert(renderedBfs.finalState.tail === "tail = 27", `${id}: tail 指针终态错误`);
+      assert(renderedBfs.finalState.headPointer === "H" && renderedBfs.finalState.tailPointer === "T", `${id}: 队空时 H/T 指针没有重合`);
+      assert(renderedBfs.finalState.queueLength === 27, `${id}: 入队节点数量错误`);
+      assert(renderedBfs.finalState.queuePrefix === "(2,1),(2,2),(2,3),(2,4),(3,3)", `${id}: 队列不是 BFS 顺序`);
+      assert(renderedBfs.finalState.hasBreadth, `${id}: 动画中没有形成包含多个节点的队列`);
+      assert(renderedBfs.finalState.sourceIsBfs, `${id}: 源码不是指定的 BFS 实现`);
+      assert(
+        renderedBfs.frontState.value === "(2,1)" &&
+          renderedBfs.frontState.distance === "dis = 1" &&
+          renderedBfs.frontState.stage === "已读取，等待 pop()" &&
+          renderedBfs.frontState.arrowVisible &&
+          renderedBfs.frontState.head === "head = 0",
+        `${id}: front() 没有正确复制队首`
+      );
+      assert(
+        renderedBfs.popState.value === "(2,1)" &&
+          renderedBfs.popState.stage === "已出队，正在扩展" &&
+          renderedBfs.popState.arrowHidden &&
+          renderedBfs.popState.exited === "出" &&
+          renderedBfs.popState.head === "head = 1",
+        `${id}: pop() 没有正确移动 head 或保留 h`
+      );
+      assert(
+        renderedBfs.nodeDoneState.value === "(2,1)" &&
+          renderedBfs.nodeDoneState.stage === "扩展完成",
+        `${id}: h 没有保留到节点扩展完成`
+      );
     }
 
     if (id === "segment_tree_range_update") {
