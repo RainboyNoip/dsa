@@ -12,6 +12,8 @@ python3 -m http.server 4173 --directory public
 
 访问 <http://127.0.0.1:4173/>。算法使用实体目录入口，例如快速排序位于 <http://127.0.0.1:4173/quickSort/>。
 
+SPFA 演示位于 <http://127.0.0.1:4173/spfa/>，包含负权边无负环、可达负环和不可达负环三个示例，同时显示队列、`dis`、`cnt`、`in_queue` 与历史路径。可用 `node tests/spfa.mjs` 检查逐帧状态与最短路结果。
+
 部署站点不需要 Node.js、npm、Webpack 或其他构建步骤，也不应将请求回退到首页。
 
 ## Nginx 部署
@@ -50,7 +52,7 @@ node tests/smoke.mjs
 DSA_BASE_URL=http://127.0.0.1:8080 CHROMIUM_BIN=/usr/bin/chromium node tests/smoke.mjs
 ```
 
-脚本会检查全部 27 个公开演示的资源请求、首末帧渲染、源码高亮、讲解日志、播放状态、跳帧、重置、速度和对话框。
+脚本会检查全部 28 个公开演示的资源请求、首末帧渲染、源码高亮、讲解日志、播放状态、跳帧、重置、速度和对话框。
 
 ## 维护演示
 

@@ -30,6 +30,7 @@ const demonstrations = [
   "merge_sort",
   "merge_sort_principle",
   "prim",
+  "spfa",
   "quickSort",
   "segment_tree_build",
   "segment_tree_range_update",
@@ -207,6 +208,7 @@ async function testDemonstration(debugPort, id) {
       "group_knapsack",
       "complete_knapsack",
       "maze_bfs",
+      "spfa",
       "segment_tree_build",
       "segment_tree_range_update",
       "segment_tree_single_update"
@@ -246,6 +248,36 @@ async function testDemonstration(debugPort, id) {
     assert(last.frame === last.total && !last.playing, `${id}: 末帧状态错误`);
     assert(last.logsMatch, `${id}: 末帧讲解日志不一致`);
     assert(!last.shouldHighlight || last.highlighted, `${id}: 末帧源码未高亮`);
+
+    if (id === "spfa") {
+      const spfa = await page.evaluate(`(() => {
+        const player = window.demoPlayer;
+        const select = document.querySelector('#example-select');
+        const results = [];
+        for (const key of ['negative', 'unreachable', 'shortest', 'negative', 'shortest']) {
+          player.play();
+          select.value = key;
+          select.dispatchEvent(new Event('change'));
+          const reset = player.frameIndex === 0 && !player.playing &&
+            player.frames[0].status.queue.length === 0;
+          // Render every frame to catch intermediate-state rendering errors.
+          for (let i = 0; i < player.frames.length; i++) player.renderFrame(i, 0);
+          const final = player.frames.at(-1).status;
+          results.push({ key, reset, result: final.result,
+            distances: [...document.querySelectorAll('.distance-value')].map(e => e.textContent).join(','),
+            formula: document.querySelector('.operation-formula').textContent,
+            queueMatches: [...document.querySelectorAll('.queue-value')].map(e => Number(e.textContent)).join(',') === final.queue.join(',') });
+        }
+        return results;
+      })()`);
+      for (const example of spfa) {
+        assert(example.reset && example.queueMatches, `${id}: 切换示例没有清理状态或队列显示错误`);
+        assert(example.result === (example.key !== "negative"), `${id}: 负环判定错误`);
+        if (example.key === "shortest") assert(example.distances === "0,-2,2,-1,1,INF", `${id}: 最短距离错误`);
+        if (example.key === "unreachable") assert(example.distances === "0,3,2,INF,INF,INF", `${id}: 不可达负环影响了结果`);
+        if (example.key === "negative") assert(example.formula.includes("返回 false"), `${id}: 未显示负环结果`);
+      }
+    }
 
     if (id === "group_knapsack") {
       const renderedKnapsack = await page.evaluate(`(() => ({
