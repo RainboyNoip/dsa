@@ -10,6 +10,8 @@ class DemonstrationPlayer {
     this.marker = null;
     this.editor = null;
     this.generatedFrameCount = 0;
+    this.sourceFontSize = 18;
+    this.copyFeedbackTimer = null;
 
     this.elements = {
       sceneStatus: document.querySelector("#scene-status"),
@@ -38,6 +40,7 @@ class DemonstrationPlayer {
 
     try {
       this.assertRuntimeContract();
+      this.createSourceToolbar();
       const sourcePromise = this.loadSource();
 
       window.render_init.call(window);
@@ -92,6 +95,93 @@ class DemonstrationPlayer {
     });
     this.editor.renderer.$cursorLayer.element.style.display = "none";
     this.editor.clearSelection();
+    let savedSize = 18;
+    try {
+      const value = Number(localStorage.getItem("dsa-source-font-size"));
+      if (Number.isInteger(value) && value >= 12 && value <= 32) savedSize = value;
+    } catch { /* Storage can be disabled; font controls still work for this page. */ }
+    this.setSourceFontSize(savedSize);
+    this.elements.copySource.disabled = false;
+  }
+
+  createSourceToolbar() {
+    const toolbar = document.createElement("div");
+    toolbar.className = "source-toolbar";
+    toolbar.setAttribute("role", "group");
+    toolbar.setAttribute("aria-label", "源码工具");
+    toolbar.innerHTML = `
+      <span class="source-toolbar__title">源码 <span>C / C++</span></span>
+      <span id="source-copy-status" class="source-copy-status" role="status" aria-live="polite"></span>
+      <button id="source-font-decrease" type="button" title="缩小代码字号" aria-label="缩小代码字号" disabled>A−</button>
+      <button id="source-font-reset" type="button" title="恢复默认字号（18px）" aria-label="当前字号 18px，恢复默认字号" disabled>18px</button>
+      <button id="source-font-increase" type="button" title="放大代码字号" aria-label="放大代码字号" disabled>A+</button>
+      <button id="source-copy" type="button" title="复制完整源码" disabled>复制代码</button>
+    `;
+    const pane = this.elements.editor.parentElement;
+    pane.classList.add("source-pane--toolbar");
+    pane.prepend(toolbar);
+    this.elements.fontDecrease = toolbar.querySelector("#source-font-decrease");
+    this.elements.fontReset = toolbar.querySelector("#source-font-reset");
+    this.elements.fontIncrease = toolbar.querySelector("#source-font-increase");
+    this.elements.copySource = toolbar.querySelector("#source-copy");
+    this.elements.copyStatus = toolbar.querySelector("#source-copy-status");
+    this.elements.fontDecrease.addEventListener("click", () => this.setSourceFontSize(this.sourceFontSize - 2));
+    this.elements.fontIncrease.addEventListener("click", () => this.setSourceFontSize(this.sourceFontSize + 2));
+    this.elements.fontReset.addEventListener("click", () => this.setSourceFontSize(18));
+    this.elements.copySource.addEventListener("click", () => this.copySource());
+  }
+
+  setSourceFontSize(value) {
+    this.sourceFontSize = Math.max(12, Math.min(32, value));
+    this.editor.setFontSize(this.sourceFontSize);
+    this.editor.resize(true);
+    this.elements.fontReset.textContent = `${this.sourceFontSize}px`;
+    this.elements.fontReset.setAttribute("aria-label", `当前字号 ${this.sourceFontSize}px，恢复默认字号`);
+    this.elements.fontReset.disabled = false;
+    this.elements.fontDecrease.disabled = this.sourceFontSize <= 12;
+    this.elements.fontIncrease.disabled = this.sourceFontSize >= 32;
+    try {
+      localStorage.setItem("dsa-source-font-size", String(this.sourceFontSize));
+    } catch { /* Keep the current size even when it cannot be persisted. */ }
+  }
+
+  async copySource() {
+    const button = this.elements.copySource;
+    const status = this.elements.copyStatus;
+    window.clearTimeout(this.copyFeedbackTimer);
+    button.disabled = true;
+    status.textContent = "正在复制…";
+    const source = this.editor.getValue();
+    let copied = false;
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(source);
+        copied = true;
+      }
+    } catch { /* Try the selection-based fallback when clipboard access is denied. */ }
+    if (!copied) {
+      const focused = document.activeElement;
+      const textarea = document.createElement("textarea");
+      textarea.className = "source-copy-buffer";
+      textarea.value = source;
+      textarea.readOnly = true;
+      textarea.setAttribute("aria-label", "待复制源码");
+      document.body.appendChild(textarea);
+      try {
+        textarea.select();
+        copied = document.execCommand("copy");
+      } catch { /* Report failure locally without interrupting the animation. */ }
+      finally {
+        textarea.remove();
+        focused?.focus({ preventScroll: true });
+      }
+    }
+    button.disabled = false;
+    status.textContent = copied ? "已复制" : "复制失败，请选中代码复制";
+    status.classList.toggle("source-copy-status--error", !copied);
+    if (copied) {
+      this.copyFeedbackTimer = window.setTimeout(() => { status.textContent = ""; }, 2500);
+    }
   }
 
   setFrames(frames) {

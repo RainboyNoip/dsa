@@ -23,13 +23,7 @@
     svg = document.querySelector(".scene > svg");
     svg.setAttribute("viewBox", "0 0 840 520");
     svg.replaceChildren();
-    const defs = element("defs", {}, svg);
-    ["base", "active", "success", "danger"].forEach(type => {
-      const marker = element("marker", { id: `spfa-arrow-${type}`, viewBox: "0 0 10 10", refX: 9,
-        refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
-      element("path", { d: "M 0 0 L 10 5 L 0 10 z", class: `arrow-${type}` }, marker);
-    });
-    label(svg, 24, 68, "有向带权图", "section-title");
+    label(svg, 24, 68, "无向带权图", "section-title");
     label(svg, 480, 68, "实时状态", "section-title");
     edges = element("g", { class: "graph-edges" }, svg);
     nodes = element("g", { class: "graph-nodes" }, svg);
@@ -68,22 +62,21 @@
   window.render = function (state) {
     edges.replaceChildren();
     nodes.replaceChildren();
-    state.edges.forEach(([u, v, w], index) => {
+    state.graphEdges.forEach(([u, v, w], index) => {
       const [x1, y1] = positions[u], [x2, y2] = positions[v];
       const dx = x2 - x1, dy = y2 - y1, length = Math.hypot(dx, dy);
-      // A curved 1→4 edge separates it from the upper path through vertex 2.
+      // A curved 1—4 edge separates it from the upper path through vertex 2.
       const curved = u === 1 && v === 4;
       const cx = (x1 + x2) / 2 - (curved ? 35 : 0), cy = curved ? 27 : (y1 + y2) / 2;
       const startLength = Math.hypot(cx - x1, cy - y1), endLength = Math.hypot(x2 - cx, y2 - cy);
       const sx = curved ? x1 + (cx - x1) * 24 / startLength : x1 + dx * 24 / length;
       const sy = curved ? y1 + (cy - y1) * 24 / startLength : y1 + dy * 24 / length;
-      const ex = curved ? x2 - (x2 - cx) * 29 / endLength : x2 - dx * 29 / length;
-      const ey = curved ? y2 - (y2 - cy) * 29 / endLength : y2 - dy * 29 / length;
-      const active = state.edge === index;
+      const ex = curved ? x2 - (x2 - cx) * 24 / endLength : x2 - dx * 24 / length;
+      const ey = curved ? y2 - (y2 - cy) * 24 / endLength : y2 - dy * 24 / length;
+      const active = Math.floor(state.edge / 2) === index;
       const type = active ? state.phase === "negative" ? "danger" : state.phase === "relax" ? "success" : "active" : "base";
       const group = element("g", { class: `graph-edge edge-${type}`, "data-edge": index }, edges);
-      element("path", { d: curved ? `M${sx},${sy} Q${cx},${cy} ${ex},${ey}` : `M${sx},${sy} L${ex},${ey}`,
-        "marker-end": `url(#spfa-arrow-${type})` }, group);
+      element("path", { d: curved ? `M${sx},${sy} Q${cx},${cy} ${ex},${ey}` : `M${sx},${sy} L${ex},${ey}` }, group);
       const lx = curved ? (sx + 2 * cx + ex) / 4 : (x1 + x2) / 2;
       const ly = curved ? (sy + 2 * cy + ey) / 4 : (y1 + y2) / 2;
       element("rect", { x: lx - 15, y: ly - 11, width: 30, height: 22, rx: 4 }, group);

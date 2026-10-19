@@ -29,10 +29,6 @@
 .edge-active path { stroke: #a55c09; stroke-width: 3.5; }
 .edge-success path { stroke: #236b4d; stroke-width: 3.5; }
 .edge-danger path { stroke: #b33232; stroke-width: 3.5; }
-.arrow-base { fill: #96a39b; }
-.arrow-active { fill: #a55c09; }
-.arrow-success { fill: #236b4d; }
-.arrow-danger { fill: #b33232; }
 .graph-node circle { fill: #fff; stroke: #8a9990; stroke-width: 2; }
 .node-number, .node-distance, .node-source { text-anchor: middle; }
 .node-number { font-weight: 700; font-size: 19px; }

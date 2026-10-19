@@ -20,8 +20,9 @@ void init_graph(int n) {
     for (int u = 1; u <= n; ++u) g[u].clear();
 }
 
-void add_edge(int u, int v, long long w) {
+void add_edge(int u, int v, long long w) { // 无向边：双向存储
     g[u].push_back({v, w});
+    g[v].push_back({u, w});
 }
 
 // true：得到单源最短路；false：发现从 s 可达的负环。

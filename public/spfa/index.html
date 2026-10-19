@@ -14,6 +14,11 @@
     <div class="demo-shell wrapper">
       <header class="demo-toolbar">
         <div class="toolbar-buttons">
+          <a class="icon-button home-link" href="/" title="返回首页" aria-label="返回首页">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M3 10.5 12 3l9 7.5M5 9v12h5v-7h4v7h5V9"></path>
+            </svg>
+          </a>
           <button class="icon-button" id="speed-up" type="button" title="加速" aria-label="加速">
             <i class="player-icon icon-kuai" aria-hidden="true"></i>
           </button>
@@ -47,11 +52,11 @@
             <div class="spfa-controls">
               <label for="example-select">示例</label>
               <select id="example-select">
-                <option value="shortest">负权边 · 无负环</option>
-                <option value="negative">从源点可达的负环</option>
-                <option value="unreachable">源点不可达的负环</option>
+                <option value="shortest">非负权边 · 最短路</option>
+                <option value="negative">可达负权边 · 往返负环</option>
+                <option value="unreachable">不可达负权边</option>
               </select>
-              <span>有向图 · s = 1 · n = 6</span>
+              <span>无向图 · s = 1 · n = 6</span>
             </div>
             <svg role="img" aria-label="单源最短路：SPFA动画画布"></svg>
             <div class="scene-status" id="scene-status" role="status">正在准备演示</div>
@@ -108,6 +113,8 @@
       <div class="dialog-body">
         <ul>
           <li>切换示例会暂停播放，并从初始化重新开始。</li>
+          <li>每条无向边只画一次，邻接表中存储两个方向。讲解中的 u → v 表示本次尝试松弛的方向。</li>
+          <li>可达负权边可以反复往返，使距离不断减小；双向存储后会触发负环判定。</li>
           <li>橙色表示当前处理的点或边，蓝色表示队列中的点，绿色表示本帧成功更新。</li>
           <li>cnt 是当前距离对应的历史路径边数；已在队列中的点仍然更新 dis 和 cnt。</li>
           <li>只有源点可达的负环会使函数返回 false；不可达点的距离保留 INF。</li>

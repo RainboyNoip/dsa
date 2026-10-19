@@ -12,7 +12,7 @@ python3 -m http.server 4173 --directory public
 
 访问 <http://127.0.0.1:4173/>。算法使用实体目录入口，例如快速排序位于 <http://127.0.0.1:4173/quickSort/>。
 
-SPFA 演示位于 <http://127.0.0.1:4173/spfa/>，包含负权边无负环、可达负环和不可达负环三个示例，同时显示队列、`dis`、`cnt`、`in_queue` 与历史路径。可用 `node tests/spfa.mjs` 检查逐帧状态与最短路结果。
+SPFA 无向图演示位于 <http://127.0.0.1:4173/spfa/>，包含非负权最短路、可达负权边（往返负环）和不可达负权边三个示例，同时显示队列、`dis`、`cnt`、`in_queue` 与历史路径。无向边双向存储，可达负权边会使距离沿往返路径不断减小。可用 `node tests/spfa.mjs` 检查逐帧状态与最短路结果。
 
 部署站点不需要 Node.js、npm、Webpack 或其他构建步骤，也不应将请求回退到首页。
 

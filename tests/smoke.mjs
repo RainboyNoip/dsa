@@ -108,9 +108,10 @@ class DevToolsPage {
     return promise;
   }
 
-  async evaluate(expression) {
+  async evaluate(expression, { userGesture = false } = {}) {
     const response = await this.send("Runtime.evaluate", {
       expression,
+      userGesture,
       awaitPromise: true,
       returnByValue: true
     });
@@ -189,6 +190,23 @@ async function testDemonstration(debugPort, id) {
   assert(initial.visualNodes > 0, `${id}: SVG 没有可见内容`);
   assert(initial.firstLogCount === initial.expectedFirstLogCount, `${id}: 第一帧讲解不一致`);
 
+  const sourceTools = await page.evaluate(`(() => {
+    const player = window.demoPlayer;
+    const before = player.frameIndex;
+    document.querySelector('#source-font-reset').click();
+    document.querySelector('#source-font-increase').click();
+    const increased = getComputedStyle(player.elements.editor).fontSize;
+    document.querySelector('#source-font-decrease').click();
+    const decreased = getComputedStyle(player.elements.editor).fontSize;
+    const toolbar = document.querySelector('.source-toolbar').getBoundingClientRect();
+    const editor = player.elements.editor.getBoundingClientRect();
+    return { increased, decreased, stable: before === player.frameIndex,
+      separate: toolbar.bottom <= editor.top && toolbar.right <= editor.right,
+      copyEnabled: !document.querySelector('#source-copy').disabled };
+  })()`);
+  assert(sourceTools.increased === "20px" && sourceTools.decreased === "18px", `${id}: 字号按钮没有调整 Ace 字体`);
+  assert(sourceTools.stable && sourceTools.separate && sourceTools.copyEnabled, `${id}: 源码工具栏布局或状态错误`);
+
   if (id === "lifeGame") {
     assert(!initial.playDisabled, `${id}: 连续演示播放按钮被禁用`);
     await page.evaluate("window.demoPlayer.play()");
@@ -263,7 +281,15 @@ async function testDemonstration(debugPort, id) {
           // Render every frame to catch intermediate-state rendering errors.
           for (let i = 0; i < player.frames.length; i++) player.renderFrame(i, 0);
           const final = player.frames.at(-1).status;
+          const undirected = document.querySelectorAll('.graph-edge').length === final.graphEdges.length &&
+            document.querySelectorAll('.graph-edge [marker-end]').length === 0;
+          const reverseIndex = player.frames.findIndex(({status}) => status.phase === 'compare' && status.edge % 2 === 1);
+          player.renderFrame(reverseIndex, 0);
+          const reverseEdge = player.frames[reverseIndex].status.edge;
+          const reverseHighlighted = document.querySelector('.edge-active')?.dataset.edge === String(Math.floor(reverseEdge / 2));
+          player.renderFrame(player.frames.length - 1, 0);
           results.push({ key, reset, result: final.result,
+            undirected, reverseHighlighted,
             distances: [...document.querySelectorAll('.distance-value')].map(e => e.textContent).join(','),
             formula: document.querySelector('.operation-formula').textContent,
             queueMatches: [...document.querySelectorAll('.queue-value')].map(e => Number(e.textContent)).join(',') === final.queue.join(',') });
@@ -271,10 +297,11 @@ async function testDemonstration(debugPort, id) {
         return results;
       })()`);
       for (const example of spfa) {
+        assert(example.undirected && example.reverseHighlighted, `${id}: 无向边绘制或反向松弛高亮错误`);
         assert(example.reset && example.queueMatches, `${id}: 切换示例没有清理状态或队列显示错误`);
         assert(example.result === (example.key !== "negative"), `${id}: 负环判定错误`);
-        if (example.key === "shortest") assert(example.distances === "0,-2,2,-1,1,INF", `${id}: 最短距离错误`);
-        if (example.key === "unreachable") assert(example.distances === "0,3,2,INF,INF,INF", `${id}: 不可达负环影响了结果`);
+        if (example.key === "shortest") assert(example.distances === "0,3,2,4,6,INF", `${id}: 最短距离错误`);
+        if (example.key === "unreachable") assert(example.distances === "0,3,4,INF,INF,INF", `${id}: 不可达负环影响了结果`);
         if (example.key === "negative") assert(example.formula.includes("返回 false"), `${id}: 未显示负环结果`);
       }
     }
@@ -485,6 +512,62 @@ async function testDemonstration(debugPort, id) {
       reset.frame === 1 && !reset.playing && reset.logs === reset.expectedLogs,
       `${id}: 重置状态错误`
     );
+  }
+
+  if (id === "spfa") {
+    await page.send("Browser.grantPermissions", {
+      origin: new URL(baseUrl).origin,
+      permissions: ["clipboardReadWrite", "clipboardSanitizedWrite"]
+    });
+    await page.send("Page.bringToFront");
+    const clipboard = await page.evaluate(`(async () => {
+      const player = window.demoPlayer;
+      const nativeClipboard = navigator.clipboard;
+      const originalExec = document.execCommand;
+      const source = player.editor.getValue();
+      document.querySelector('#source-copy').click();
+      for (let i = 0; i < 100 && player.elements.copySource.disabled; i++) {
+        await new Promise(resolve => setTimeout(resolve, 20));
+      }
+      const native = await nativeClipboard.readText() === source &&
+        player.elements.copyStatus.textContent === '已复制';
+      let fallback, failure;
+      try {
+        await nativeClipboard.writeText('fallback sentinel');
+        Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined });
+        await player.copySource();
+        fallback = await nativeClipboard.readText() === source &&
+          document.querySelector('.source-copy-buffer') === null;
+        document.execCommand = () => false;
+        await player.copySource();
+        failure = player.elements.copyStatus.textContent.includes('复制失败') &&
+          !player.elements.copySource.disabled && document.documentElement.dataset.demoState === 'ready';
+      } finally {
+        delete navigator.clipboard;
+        document.execCommand = originalExec;
+      }
+      for (let i = 0; i < 20; i++) document.querySelector('#source-font-increase').click();
+      const maximum = getComputedStyle(player.elements.editor).fontSize === '32px' &&
+        document.querySelector('#source-font-increase').disabled;
+      for (let i = 0; i < 20; i++) document.querySelector('#source-font-decrease').click();
+      const minimum = getComputedStyle(player.elements.editor).fontSize === '12px' &&
+        document.querySelector('#source-font-decrease').disabled;
+      document.querySelector('#source-font-reset').click();
+      document.querySelector('#source-font-increase').click();
+      return { native, fallback, failure, maximum, minimum };
+    })()`, { userGesture: true });
+    assert(clipboard.native && clipboard.fallback, `${id}: 完整源码复制或兼容路径失败`);
+    assert(clipboard.failure, `${id}: 复制失败不应破坏播放器`);
+    assert(clipboard.maximum && clipboard.minimum, `${id}: 字号边界未生效`);
+    await page.send("Page.reload");
+    await delay(150);
+    assert(await waitForReady(page) === "ready", `${id}: 刷新失败`);
+    const persisted = await page.evaluate(`(() => {
+      const size = getComputedStyle(window.demoPlayer.elements.editor).fontSize;
+      document.querySelector('#source-font-reset').click();
+      return size;
+    })()`);
+    assert(persisted === "20px", `${id}: 刷新后字号未保留`);
   }
 
   const dialogs = await page.evaluate(`(() => {

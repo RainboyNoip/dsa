@@ -11,10 +11,11 @@ const plain = value => JSON.parse(JSON.stringify(value));
 for (const [key, example] of Object.entries(examples)) {
   const distances = Array(7).fill(Infinity);
   distances[1] = 0;
+  const directedEdges = example.edges.flatMap(([u, v, w]) => [[u, v, w], [v, u, w]]);
   let changed;
   for (let pass = 0; pass < 6; pass++) {
     changed = false;
-    for (const [u, v, w] of example.edges) {
+    for (const [u, v, w] of directedEdges) {
       if (distances[u] + w < distances[v]) {
         distances[v] = distances[u] + w;
         changed = true;
@@ -24,6 +25,7 @@ for (const [key, example] of Object.entries(examples)) {
   }
   const frames = plain(buildFrames(key));
   const last = frames.at(-1).status;
+  assert.deepEqual(last.edges, plain(directedEdges), "each undirected edge is stored in both directions");
   assert.equal(last.result, !changed, `${key}: result matches Bellman–Ford`);
   if (last.result) assert.deepEqual(last.dis.slice(1), distances.slice(1).map(d => Number.isFinite(d) ? d : null));
   for (let i = 0; i < frames.length; i++) {
